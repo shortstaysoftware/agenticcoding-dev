@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgenticCoding.dev | The Future of AI & Code</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6', // Teal
+                            600: '#0d9488',
+                            900: '#134e4a',
+                        },
+                        dark: {
+                            bg: '#0f172a', // Slate 900
+                            card: '#1e293b', // Slate 800
+                            border: '#334155', // Slate 700
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        /* Custom scrollbar for code blocks or sidebars */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+        
+        .hero-pattern {
+            background-color: #0f172a;
+            opacity: 0.8;
+            background-image: radial-gradient(#1e293b 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+    </style>
+</head>
+<body class="antialiased font-sans selection:bg-brand-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-dark-bg/80 backdrop-blur-md border-b border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-mono font-bold text-lg">
+                        &lt;/&gt;
+                    </div>
+                    <span class="font-mono font-bold text-xl tracking-tight text-white">agentic<span class="text-brand-500">coding</span>.dev</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#episodes" class="hover:text-brand-500 hover:bg-dark-card px-3 py-2 rounded-md text-sm font-medium transition-colors">Podcast</a>
+                        <a href="#articles" class="hover:text-brand-500 hover:bg-dark-card px-3 py-2 rounded-md text-sm font-medium transition-colors">Articles</a>
+                        <a href="#about" class="hover:text-brand-500 hover:bg-dark-card px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                        <a href="#newsletter" class="bg-brand-600 hover:bg-brand-500 text-white px-4 py-2 rounded-md text-sm font-bold shadow-lg shadow-brand-500/20 transition-all">Subscribe</a>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none p-2">
+                        <i class="ph ph-list text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-dark-card border-b border-dark-border">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#episodes" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Podcast</a>
+                <a href="#articles" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Articles</a>
+                <a href="#about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#newsletter" class="text-brand-400 font-bold block px-3 py-2 rounded-md text-base font-medium">Subscribe</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-24 pb-12 lg:pt-32 lg:pb-16 overflow-hidden">
+        <div class="absolute inset-0 hero-pattern -z-10"></div>
+        <div class="absolute top-0 left-1/2 w-full -translate-x-1/2 h-full bg-gradient-to-b from-transparent to-dark-bg z-0 pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-dark-card border border-dark-border text-xs font-mono text-brand-500 mb-4 animate-pulse-slow">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
+                </span>
+                New Video: The Agentic Workflow
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-4 text-white">
+                Home of the C3-Stack: <br class="hidden sm:block" />
+                <span class="bg-brand-600 text-white px-2 sm:px-4 py-1 rounded-lg leading-snug box-decoration-clone">Convex & Claude Code</span>
+            </h1>
+            
+            <p class="mt-4 text-xl text-gray-400 max-w-2xl mx-auto mb-8">
+                Deep dives into AI agents, LLM-driven development, and the next generation of software engineering.
+            </p>
+            
+            <div class="flex justify-center gap-4">
+                <a href="#episodes" class="px-8 py-3 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-semibold shadow-lg shadow-brand-500/25 transition-all flex items-center gap-2">
+                    <i class="ph-fill ph-play-circle text-xl"></i> Watch Episodes
+                </a>
+                <a href="#articles" class="px-8 py-3 rounded-lg bg-dark-card hover:bg-slate-700 border border-dark-border text-white font-semibold transition-all">
+                    Read Articles
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Latest Videos Section -->
+    <section id="episodes" class="py-12 bg-dark-bg relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-end justify-between mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-2">Latest Videos</h2>
+                    <p class="text-gray-400">Conversations & code with the architects of AI.</p>
+                </div>
+                <!-- <a href="#" class="hidden sm:flex items-center text-brand-500 hover:text-brand-400 font-medium transition-colors">
+                    View all videos <i class="ph ph-arrow-right ml-2"></i>
+                </a> -->
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Featured Video (Span 2 cols) - Episode 4 -->
+                <div class="lg:col-span-2 bg-dark-card border border-brand-500/30 rounded-2xl overflow-hidden hover:shadow-lg hover:shadow-brand-500/10 group transition-all">
+                    <!-- Video Player -->
+                    <div class="aspect-video w-full bg-gray-900 relative overflow-hidden video-container" data-video-id="zoxAXfhpZeA">
+                        <!-- YouTube Thumbnail -->
+                        <img src="https://img.youtube.com/vi/zoxAXfhpZeA/maxresdefault.jpg" alt="Video thumbnail" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+
+                        <!-- Play Button Overlay -->
+                        <div class="video-overlay absolute inset-0 flex items-center justify-center z-10 bg-black/30">
+                            <button class="w-20 h-20 bg-brand-600/90 hover:bg-brand-500 text-white rounded-full flex items-center justify-center shadow-2xl backdrop-blur-sm transform group-hover:scale-110 transition-all play-btn">
+                                <i class="ph-fill ph-play text-3xl ml-1"></i>
+                            </button>
+                        </div>
+
+                        <!-- Episode Badge -->
+                        <div class="absolute top-4 left-4 bg-brand-600 text-white text-xs font-mono font-bold px-2 py-1 rounded backdrop-blur-md z-20">
+                            EP 04
+                        </div>
+                    </div>
+
+                    <div class="p-6 sm:p-8">
+                        <div class="flex flex-wrap items-center gap-3 mb-3 text-sm">
+                            <span class="text-brand-400 font-bold font-mono">LATEST</span>
+                            <span class="w-1 h-1 rounded-full bg-gray-500"></span>
+                            <span class="text-gray-400">Apr 19, 2025</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-brand-400 transition-colors">
+                            The Dawn of Agentic AI: Why o3 & o4-mini Are a Watershed Moment
+                        </h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            OpenAI just unleashed o3 on the world, along with o4-mini. We dive into why these leaner, tool-using models matter far beyond raw benchmarks.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Secondary Videos List -->
+                <div class="space-y-6 lg:col-span-1">
+
+                    <!-- Episode 3 -->
+                    <div class="bg-dark-card border border-dark-border rounded-xl p-4 transition-all hover:border-brand-500/30 group cursor-pointer video-card" data-video-id="5K9062GejC4">
+                        <div class="flex gap-4">
+                             <div class="w-32 aspect-video bg-gray-800 rounded-lg flex-shrink-0 relative overflow-hidden">
+                                 <img src="https://img.youtube.com/vi/5K9062GejC4/mqdefault.jpg" alt="Video thumbnail" class="absolute inset-0 w-full h-full object-cover">
+                                 <div class="absolute top-1 left-1 bg-brand-600 text-white text-[9px] font-mono font-bold px-1 rounded">EP 03</div>
+                                 <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                                     <i class="ph-fill ph-play-circle text-3xl text-white"></i>
+                                 </div>
+                             </div>
+                             <div class="flex-1 min-w-0">
+                                <h4 class="text-white font-bold leading-tight mb-2 group-hover:text-brand-400 line-clamp-2">Has Gemini 2.5 Pro Stolen the Coding Crown from Claude?</h4>
+                                <span class="text-xs text-gray-500 font-mono">Apr 16, 2025</span>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Episode 2 -->
+                    <div class="bg-dark-card border border-dark-border rounded-xl p-4 transition-all hover:border-brand-500/30 group cursor-pointer video-card" data-video-id="bS89F1vXN-U">
+                        <div class="flex gap-4">
+                             <div class="w-32 aspect-video bg-gray-800 rounded-lg flex-shrink-0 relative overflow-hidden">
+                                 <img src="https://img.youtube.com/vi/bS89F1vXN-U/mqdefault.jpg" alt="Video thumbnail" class="absolute inset-0 w-full h-full object-cover">
+                                 <div class="absolute top-1 left-1 bg-brand-600 text-white text-[9px] font-mono font-bold px-1 rounded">EP 02</div>
+                                 <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                                     <i class="ph-fill ph-play-circle text-3xl text-white"></i>
+                                 </div>
+                             </div>
+                             <div class="flex-1 min-w-0">
+                                <h4 class="text-white font-bold leading-tight mb-2 group-hover:text-brand-400 line-clamp-2">AI Augmented Ecommerce: Bringing Big Tech to Small Businesses</h4>
+                                <span class="text-xs text-gray-500 font-mono">Apr 09, 2025</span>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Episode 1 -->
+                    <div class="bg-dark-card border border-dark-border rounded-xl p-4 transition-all hover:border-brand-500/30 group cursor-pointer video-card" data-video-id="1c6nuqdejlM">
+                        <div class="flex gap-4">
+                             <div class="w-32 aspect-video bg-gray-800 rounded-lg flex-shrink-0 relative overflow-hidden">
+                                 <img src="https://img.youtube.com/vi/1c6nuqdejlM/mqdefault.jpg" alt="Video thumbnail" class="absolute inset-0 w-full h-full object-cover">
+                                 <div class="absolute top-1 left-1 bg-brand-600 text-white text-[9px] font-mono font-bold px-1 rounded">EP 01</div>
+                                 <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                                     <i class="ph-fill ph-play-circle text-3xl text-white"></i>
+                                 </div>
+                             </div>
+                             <div class="flex-1 min-w-0">
+                                <h4 class="text-white font-bold leading-tight mb-2 group-hover:text-brand-400 line-clamp-2">AI Augmented Society: The Future of Work and Human Purpose</h4>
+                                <span class="text-xs text-gray-500 font-mono">Apr 02, 2025</span>
+                             </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <!-- <div class="mt-8 text-center sm:hidden">
+                 <a href="#" class="inline-flex items-center text-brand-500 hover:text-brand-400 font-medium transition-colors">
+                    View all videos <i class="ph ph-arrow-right ml-2"></i>
+                </a>
+            </div> -->
+        </div>
+    </section>
+
+    <!-- Articles Section -->
+    <section id="articles" class="py-20 border-t border-dark-border/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-white mb-2">Technical Articles</h2>
+                <p class="text-gray-400">Manuals for the automated age.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Article 1 -->
+                <a href="articles/declarative-refactoring.html" class="flex flex-col h-full bg-dark-card rounded-xl overflow-hidden border border-dark-border hover:border-brand-500/50 transition-all group">
+                    <div class="h-48 relative overflow-hidden">
+                        <img src="articles/images/declarative-refactoring-result.jpeg" alt="Declarative refactoring result" class="absolute inset-0 w-full h-full object-cover object-bottom group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-card/80 to-transparent"></div>
+                        <div class="absolute top-4 left-4">
+                            <span class="px-2 py-1 rounded bg-black/50 backdrop-blur text-xs font-mono text-brand-300 border border-brand-500/30">Pattern</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brand-400 transition-colors">Stop Planning, Start Looping</h3>
+                        <p class="text-gray-400 text-sm mb-4 flex-1">
+                            A Claude Code pattern for unattended refactoring. Replace prose plans with validators that must pass.
+                        </p>
+                        <div class="flex items-center justify-between text-xs text-gray-500 font-mono border-t border-dark-border pt-4 mt-auto">
+                            <span>16 Jan 2025</span>
+                            <span>5 min read</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+            <!-- <div class="mt-12 text-center">
+                <a href="#" class="px-6 py-3 rounded border border-dark-border text-white hover:bg-dark-card hover:border-brand-500 transition-all inline-block">
+                    View Archive
+                </a>
+            </div> -->
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section id="newsletter" class="py-20 relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="bg-gradient-to-b from-dark-card to-dark-bg border border-dark-border rounded-2xl p-8 sm:p-12 text-center shadow-2xl">
+                <i class="ph ph-envelope-simple-open text-5xl text-brand-500 mb-6 inline-block"></i>
+                <h2 class="text-3xl font-bold text-white mb-4">Join the Agentic Revolution</h2>
+                <p class="text-gray-400 mb-8 max-w-lg mx-auto">
+                    Get the latest episodes, tutorials, and insights on building AI agents delivered straight to your inbox. No spam, just code.
+                </p>
+                
+                <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="event.preventDefault(); alert('Thanks for subscribing! (This is a demo)');">
+                    <input type="email" placeholder="dev@example.com" class="flex-1 bg-dark-bg border border-dark-border rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all" required>
+                    <button type="submit" class="bg-brand-600 hover:bg-brand-500 text-white font-bold px-6 py-3 rounded-lg transition-colors shadow-lg shadow-brand-500/20">
+                        Subscribe
+                    </button>
+                </form>
+                <p class="text-xs text-gray-600 mt-4">Unsubscribe at any time.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark-bg border-t border-dark-border pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-6 h-6 bg-brand-500 rounded flex items-center justify-center text-white font-mono font-bold text-xs">
+                            &lt;/&gt;
+                        </div>
+                        <span class="font-mono font-bold text-lg text-white">agentic<span class="text-brand-500">coding</span>.dev</span>
+                    </div>
+                    <p class="text-gray-500 text-sm max-w-xs">
+                        Exploring the intersection of software engineering and artificial intelligence. Built for builders.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-4">Content</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Podcast</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Articles</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Tutorials</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Snippets</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-4">Social</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-brand-500 transition-colors"><i class="ph ph-twitter-logo mr-1"></i> Twitter / X</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors"><i class="ph ph-github-logo mr-1"></i> GitHub</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors"><i class="ph ph-youtube-logo mr-1"></i> YouTube</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors"><i class="ph ph-discord-logo mr-1"></i> Discord</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-dark-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-600 text-sm">© 2026 AgenticCoding.dev. All rights reserved.</p>
+                <div class="flex gap-6 text-sm text-gray-600">
+                    <a href="#" class="hover:text-gray-400">Privacy</a>
+                    <a href="#" class="hover:text-gray-400">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Video Modal -->
+    <div id="video-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeVideoModal()"></div>
+        <div class="absolute inset-4 md:inset-12 lg:inset-20 flex items-center justify-center">
+            <div class="relative w-full max-w-5xl">
+                <button onclick="closeVideoModal()" class="absolute -top-12 right-0 text-white hover:text-brand-500 transition-colors">
+                    <i class="ph ph-x text-3xl"></i>
+                </button>
+                <div class="aspect-video w-full bg-black rounded-xl overflow-hidden shadow-2xl">
+                    <iframe id="modal-iframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // YouTube Embed Functions
+        function embedVideo(container, videoId) {
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+            iframe.className = 'absolute inset-0 w-full h-full';
+            iframe.frameBorder = '0';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+
+            // Remove thumbnail and overlay
+            const img = container.querySelector('img');
+            const overlay = container.querySelector('.video-overlay');
+            const badge = container.querySelector('.absolute.top-4');
+            if (img) img.remove();
+            if (overlay) overlay.remove();
+            if (badge) badge.remove();
+
+            container.appendChild(iframe);
+        }
+
+        function openVideoModal(videoId) {
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('modal-iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('modal-iframe');
+            iframe.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeVideoModal();
+        });
+
+        // Featured video - embed inline
+        const featuredContainer = document.querySelector('.video-container');
+        if (featuredContainer) {
+            const playBtn = featuredContainer.querySelector('.play-btn');
+            playBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const videoId = featuredContainer.dataset.videoId;
+                embedVideo(featuredContainer, videoId);
+            });
+        }
+
+        // Video cards - open modal
+        const videoCards = document.querySelectorAll('.video-card');
+        videoCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const videoId = card.dataset.videoId;
+                openVideoModal(videoId);
+            });
+        });
+    </script>
+</body>
+</html>
