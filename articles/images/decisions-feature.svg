@@ -1,0 +1,66 @@
+<svg viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a5f"/>
+      <stop offset="100%" style="stop-color:#0f172a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="400" fill="url(#bg)"/>
+
+  <!-- Terminal window -->
+  <g transform="translate(100, 40)">
+    <!-- Terminal frame -->
+    <rect x="0" y="0" width="600" height="320" rx="12" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+
+    <!-- Terminal header -->
+    <rect x="0" y="0" width="600" height="40" rx="12" fill="#0f172a"/>
+    <rect x="0" y="28" width="600" height="12" fill="#0f172a"/>
+
+    <!-- Traffic lights -->
+    <circle cx="24" cy="20" r="7" fill="#ef4444"/>
+    <circle cx="48" cy="20" r="7" fill="#eab308"/>
+    <circle cx="72" cy="20" r="7" fill="#22c55e"/>
+
+    <!-- Title -->
+    <text x="540" y="25" fill="#64748b" font-family="monospace" font-size="13" text-anchor="end">decisions/INDEX.md</text>
+
+    <!-- Terminal content -->
+    <g transform="translate(28, 60)">
+      <!-- Header -->
+      <text x="0" y="0" fill="#64748b" font-family="monospace" font-size="15"># Decision Index</text>
+
+      <!-- ADR entries -->
+      <g transform="translate(0, 40)">
+        <text x="0" y="0" fill="#14b8a6" font-family="monospace" font-size="14" font-weight="bold">ADR-001</text>
+        <text x="100" y="0" fill="#f8fafc" font-family="monospace" font-size="14">Pure logic separation</text>
+      </g>
+
+      <g transform="translate(0, 80)">
+        <text x="0" y="0" fill="#3b82f6" font-family="monospace" font-size="14" font-weight="bold">ADR-002</text>
+        <text x="100" y="0" fill="#f8fafc" font-family="monospace" font-size="14">API entry points via api.ts facade</text>
+      </g>
+
+      <g transform="translate(0, 120)">
+        <text x="0" y="0" fill="#a855f7" font-family="monospace" font-size="14" font-weight="bold">ADR-003</text>
+        <text x="100" y="0" fill="#f8fafc" font-family="monospace" font-size="14">Max 3 levels submodule depth</text>
+      </g>
+
+      <g transform="translate(0, 160)">
+        <text x="0" y="0" fill="#f59e0b" font-family="monospace" font-size="14" font-weight="bold">ADR-004</text>
+        <text x="100" y="0" fill="#f8fafc" font-family="monospace" font-size="14">Validators export from schema.ts</text>
+      </g>
+
+      <g transform="translate(0, 200)">
+        <text x="0" y="0" fill="#ec4899" font-family="monospace" font-size="14" font-weight="bold">ADR-005</text>
+        <text x="100" y="0" fill="#f8fafc" font-family="monospace" font-size="14">Workflow functions in workflows/</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Subtle glow effects -->
+  <circle cx="400" cy="200" r="250" fill="#14b8a6" opacity="0.03"/>
+  <circle cx="200" cy="350" r="150" fill="#3b82f6" opacity="0.03"/>
+  <circle cx="600" cy="100" r="120" fill="#a855f7" opacity="0.03"/>
+</svg>

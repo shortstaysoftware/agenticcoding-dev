@@ -548,6 +548,237 @@
         .loop-terminal-success {
             color: #2dd4bf;
         }
+        .loop-terminal-label {
+            color: #64748b;
+            margin-right: 0.5rem;
+        }
+
+        /* Callout box */
+        .callout-box {
+            background: linear-gradient(135deg, #134e4a 0%, #1e293b 100%);
+            border: 1px solid #14b8a6;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        .callout-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #14b8a6;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+        .callout-title i {
+            font-size: 1.25rem;
+        }
+        .callout-content {
+            color: #e2e8f0;
+            line-height: 1.7;
+        }
+
+        /* Feedback loop steps */
+        .feedback-loop {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #1e293b;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+        }
+        .feedback-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: #0f172a;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+        }
+        .feedback-step-highlight {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .feedback-step-success {
+            border-color: #14b8a6;
+            background: rgba(20, 184, 166, 0.1);
+        }
+        .feedback-num {
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #334155;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+        .feedback-step-success .feedback-num {
+            background: #14b8a6;
+            color: #0f172a;
+        }
+        .feedback-text {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+        }
+        .feedback-arrow {
+            color: #475569;
+            font-size: 0.875rem;
+        }
+        @media (max-width: 768px) {
+            .feedback-loop {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .feedback-arrow {
+                transform: rotate(90deg);
+                align-self: center;
+            }
+        }
+
+        /* Collaborative loop */
+        .collab-loop {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #1e293b;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+        }
+        .collab-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .collab-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #0f172a;
+            font-size: 1.25rem;
+        }
+        .collab-content {
+            flex: 1;
+        }
+        .collab-title {
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 0.25rem;
+        }
+        .collab-desc {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+        .collab-desc code {
+            font-size: 0.8rem;
+            background: #0f172a;
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            color: #64748b;
+        }
+        .collab-connector {
+            padding: 0.5rem 0 0.5rem 0.85rem;
+            color: #475569;
+        }
+        .collab-connector-loop {
+            color: #14b8a6;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .collab-connector-loop span {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Transform grid */
+        .transform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        @media (max-width: 768px) {
+            .transform-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .transform-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        .transform-old {
+            color: #f87171;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+        .transform-old s {
+            text-decoration: line-through;
+            text-decoration-color: #ef4444;
+        }
+        .transform-new {
+            color: #14b8a6;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Getting started */
+        .getting-started {
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .gs-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: #1e293b;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+        }
+        .gs-num {
+            width: 2rem;
+            height: 2rem;
+            background: #14b8a6;
+            color: #0f172a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+        .gs-content {
+            flex: 1;
+        }
+        .gs-content strong {
+            color: #f8fafc;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .gs-content p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
 
         /* Animations */
         @keyframes fadeInUp {

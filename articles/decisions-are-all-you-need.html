@@ -1,111 +1,10 @@
-import { marked, Renderer } from "marked";
-import matter from "gray-matter";
-import { readdir, readFile, writeFile, mkdir } from "fs/promises";
-import { join, basename } from "path";
-
-const ARTICLES_DIR = "articles";
-const OUTPUT_DIR = "articles";
-
-interface ArticleMeta {
-  title: string;
-  subtitle?: string;
-  date: string;
-  author?: string;
-  tags?: string[];
-  image?: string;
-  slug: string;
-  readTime: string;
-  wordCount: number;
-}
-
-interface TocItem {
-  id: string;
-  text: string;
-  level: number;
-}
-
-function estimateReadTime(content: string): string {
-  const wordsPerMinute = 200;
-  const words = content.trim().split(/\s+/).length;
-  const minutes = Math.ceil(words / wordsPerMinute);
-  return `${minutes} min read`;
-}
-
-function countWords(content: string): number {
-  return content.trim().split(/\s+/).length;
-}
-
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
-
-function generateSlug(filename: string): string {
-  return basename(filename, ".md")
-    .replace(/^\d+-/, "")
-    .toLowerCase();
-}
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
-// Custom renderer to extract TOC and add IDs to headings
-function createRenderer(toc: TocItem[]) {
-  const renderer = new Renderer();
-
-  renderer.heading = function ({ text, depth }) {
-    const id = slugify(text);
-    if (depth === 2 || depth === 3) {
-      toc.push({ id, text, level: depth });
-    }
-    return `<h${depth} id="${id}">${text}</h${depth}>`;
-  };
-
-  // Add language label and copy button wrapper to code blocks
-  renderer.code = function ({ text, lang }) {
-    const language = lang || "text";
-    const escaped = text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-    return `<div class="code-block-wrapper">
-      <div class="code-block-header">
-        <span class="code-lang">${language}</span>
-        <button class="copy-btn" onclick="copyCode(this)">
-          <i class="ph ph-copy"></i>
-          <span>Copy</span>
-        </button>
-      </div>
-      <pre><code class="language-${language}">${escaped}</code></pre>
-    </div>`;
-  };
-
-  return renderer;
-}
-
-function template(meta: ArticleMeta, content: string, toc: TocItem[]): string {
-  const tocHtml = toc
-    .map(
-      (item) =>
-        `<a href="#${item.id}" class="toc-link ${item.level === 3 ? "toc-sub" : ""}">${item.text}</a>`
-    )
-    .join("\n");
-
-  return `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${meta.title} | AgenticCoding.dev</title>
-    <meta name="description" content="${meta.subtitle || ""}">
+    <title>Decisions Are All You Need | AgenticCoding.dev</title>
+    <meta name="description" content="How to give agents consistent behaviour across sessions">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -938,40 +837,327 @@ function template(meta: ArticleMeta, content: string, toc: TocItem[]): string {
                     </a>
 
                     <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-title mb-4 leading-tight animate-in">
-                        ${meta.title}
+                        Decisions Are All You Need
                     </h1>
 
-                    ${meta.subtitle ? `<p class="text-xl text-white mb-6 animate-in" style="animation-delay: 0.1s">${meta.subtitle}</p>` : ""}
+                    <p class="text-xl text-white mb-6 animate-in" style="animation-delay: 0.1s">How to give agents consistent behaviour across sessions</p>
 
                     <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 font-mono animate-in" style="animation-delay: 0.2s">
-                        <span>${formatDate(meta.date)}</span>
+                        <span>17 Jan 2025</span>
                         <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                        <span>${meta.readTime}</span>
+                        <span>9 min read</span>
                         <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                        <span>${meta.wordCount.toLocaleString()} words</span>
-                        ${meta.tags ? `<span class="w-1 h-1 rounded-full bg-gray-600"></span><div class="flex gap-2">${meta.tags.map((t) => `<span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">${t}</span>`).join("")}</div>` : ""}
+                        <span>1,719 words</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-600"></span><div class="flex gap-2"><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">claude-code</span><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">architecture</span><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">decisions</span></div>
                     </div>
                 </header>
 
                 <!-- Article Content -->
                 <article class="max-w-3xl">
                     <div class="prose">
-                        ${content}
+                        <h2 id="the-memory-problem">The Memory Problem</h2><p>You&#39;ve seen this before. User management gets a service class. Orders get helper functions. Payments get a singleton. Same agent, same codebase, three incompatible patterns.</p>
+<div class="loop-terminal">
+  <div class="loop-terminal-header">
+    <span class="loop-terminal-dot" style="background:#ef4444"></span>
+    <span class="loop-terminal-dot" style="background:#eab308"></span>
+    <span class="loop-terminal-dot" style="background:#22c55e"></span>
+    <span class="loop-terminal-title">without decisions</span>
+  </div>
+  <div class="loop-terminal-body">
+    <div class="loop-terminal-line loop-terminal-dim">Task 1: Agent creates UserService class</div>
+    <div class="loop-terminal-line loop-terminal-dim">Task 2: Agent creates orderHelpers functions</div>
+    <div class="loop-terminal-line loop-terminal-dim">Task 3: Agent creates PaymentManager singleton</div>
+    <div class="loop-terminal-line loop-terminal-error"><i class="ph ph-x"></i> Three different patterns. No consistency.</div>
+    <div class="loop-terminal-line loop-terminal-muted">... hours of cleanup later ...</div>
+  </div>
+</div>
+
+<p>This is what statelessness looks like in practice. AI agents have no memory between sessions, limited context within them. Every response generated fresh. The result isn&#39;t just inconsistency: it&#39;s technical debt that compounds with every task you delegate.</p>
+<p>The obvious fix is rules files. CLAUDE.md, cursor rules, system prompts full of instructions. But rules without reasoning don&#39;t stick. &quot;Use service classes&quot; tells the agent what to do, not when or why. Edge cases get handled inconsistently. The agent follows the letter, misses the intent.</p>
+<p>Rules also lack enforcement. Nothing stops the agent from ignoring them when pattern-matching pulls elsewhere. Suggestions aren&#39;t constraints.</p>
+<div class="callout-box">
+  <div class="callout-title"><i class="ph ph-lightbulb"></i> The Real Fix</div>
+  <div class="callout-content">Document architectural decisions with clear reasoning. Enforce them with validators that run after every edit. The agent reads the decision, understands the why, and can't make choices that violate it. <strong>Reasoning + enforcement = consistency.</strong></div>
+</div>
+
+<h2 id="why-agents-need-decisions">Why Agents Need Decisions</h2><p>Without documented decisions, agents pattern-match from whatever code they can see. They infer conventions from examples. Sometimes correctly. Often not.</p>
+<p>The longer the session, the worse this gets. Structural choice in hour one based on one part of the codebase. By hour four, different code, incompatible choice. By hour six, inconsistent in ways that take hours to untangle.</p>
+<div class="loop-terminal">
+  <div class="loop-terminal-header">
+    <span class="loop-terminal-dot" style="background:#ef4444"></span>
+    <span class="loop-terminal-dot" style="background:#eab308"></span>
+    <span class="loop-terminal-dot" style="background:#22c55e"></span>
+    <span class="loop-terminal-title">decisions/INDEX.md</span>
+  </div>
+  <div class="loop-terminal-body">
+    <div class="loop-terminal-line loop-terminal-dim"># Decision Index</div>
+    <div class="loop-terminal-line"></div>
+    <div class="loop-terminal-line"><span class="loop-terminal-label">ADR-001</span> Pure logic separation</div>
+    <div class="loop-terminal-line"><span class="loop-terminal-label">ADR-002</span> API entry points via api.ts facade</div>
+    <div class="loop-terminal-line"><span class="loop-terminal-label">ADR-003</span> Max 3 levels submodule depth</div>
+    <div class="loop-terminal-line"><span class="loop-terminal-label">ADR-004</span> Validators export from schema.ts</div>
+    <div class="loop-terminal-line"><span class="loop-terminal-label">ADR-005</span> Workflow functions in workflows/</div>
+  </div>
+</div>
+
+<p>Documented decisions prevent this. The agent doesn&#39;t infer, it reads. When encountering an edge case, it reasons from documented principles rather than guessing from patterns.</p>
+<p>The result: consistency that compounds. Every decision aligns with every previous decision, because they all flow from the same documented reasoning.</p>
+<h2 id="decision-records">Decision Records</h2><p>A decision record documents one architectural choice: what was decided, why, and how to verify compliance.</p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-lang">markdown</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-markdown"># Decision: Pure Logic Separation
+
+**Context:** Complex modules mix database access with calculations,
+making unit testing difficult.
+
+**Decision:** Separate pure functions into `_logic/` directories.
+These files must have no database access and no framework imports.
+
+**Reasoning:** Pure functions are trivially testable. No mocking
+required. Fast test execution. Clear separation of concerns.
+
+**Compliance:** Files in `_logic/` must not import MutationCtx,
+QueryCtx, or @/_generated/server. No ctx.db.* calls.</code></pre>
+    </div><p><strong>The reasoning section is what matters.</strong> Rules tell the AI what to do. Reasoning tells it why, so it can handle cases the rule doesn&#39;t cover.</p>
+<p>When the AI understands that <code>_logic/</code> exists for testability, it knows a function doing date arithmetic belongs there. But a function that fetches data then does arithmetic? Needs to be split. The fetch stays in <code>functions/</code>, the calculation moves to <code>_logic/</code>.</p>
+<p>Without reasoning, the AI pattern-matches. It sees &quot;calculation&quot; and puts everything in <code>_logic/</code>, database calls included.</p>
+<h2 id="enforcement-validators-as-constraints">Enforcement: Validators as Constraints</h2><p>Decision records without enforcement are suggestions. The AI might follow them. It might not.</p>
+<p>Validators turn decisions into constraints. Every time the AI edits a file, a validator checks whether the decision was followed. If not, the error message includes the decision details. The AI sees what it did wrong and how to fix it in a single response.</p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-lang">json</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit|Write",
+      "hooks": [{
+        "type": "command",
+        "command": "pnpm lint --quick --file \"$file_path\""
+      }]
+    }]
+  }
+}</code></pre>
+    </div><p>This runs after every file edit. Each error type has a templated message: the decision, reasoning, and fix are pre-written for that violation category:</p>
+<div class="loop-terminal">
+  <div class="loop-terminal-header">
+    <span class="loop-terminal-dot" style="background:#ef4444"></span>
+    <span class="loop-terminal-dot" style="background:#eab308"></span>
+    <span class="loop-terminal-dot" style="background:#22c55e"></span>
+    <span class="loop-terminal-title">module-lint</span>
+  </div>
+  <div class="loop-terminal-body">
+    <div class="loop-terminal-line loop-terminal-error"><i class="ph ph-x"></i> ERROR: _logic/calculations.ts violates pure logic separation</div>
+    <div class="loop-terminal-line"></div>
+    <div class="loop-terminal-line"><span class="loop-terminal-label">Decision:</span> Files in _logic/ must have no framework dependencies.</div>
+    <div class="loop-terminal-line"><span class="loop-terminal-label">Reasoning:</span> Pure functions are testable without mocking.</div>
+    <div class="loop-terminal-line"><span class="loop-terminal-label">Violation:</span> Found import of MutationCtx on line 3.</div>
+    <div class="loop-terminal-line"><span class="loop-terminal-label">Fix:</span> Move database operations to functions/internal.ts</div>
+  </div>
+</div>
+
+<p>The AI doesn&#39;t need to look anything up. The error message contains everything: what decision was violated, why it exists, and the standard fix. The validator matches error patterns to pre-written remediation templates.</p>
+<div class="feedback-loop">
+  <div class="feedback-step">
+    <div class="feedback-num">1</div>
+    <div class="feedback-text">AI edits a file</div>
+  </div>
+  <div class="feedback-arrow"><i class="ph ph-arrow-right"></i></div>
+  <div class="feedback-step">
+    <div class="feedback-num">2</div>
+    <div class="feedback-text">Validator runs</div>
+  </div>
+  <div class="feedback-arrow"><i class="ph ph-arrow-right"></i></div>
+  <div class="feedback-step feedback-step-highlight">
+    <div class="feedback-num">3</div>
+    <div class="feedback-text">Error includes decision + fix</div>
+  </div>
+  <div class="feedback-arrow"><i class="ph ph-arrow-right"></i></div>
+  <div class="feedback-step">
+    <div class="feedback-num">4</div>
+    <div class="feedback-text">AI fixes it</div>
+  </div>
+  <div class="feedback-arrow"><i class="ph ph-arrow-right"></i></div>
+  <div class="feedback-step feedback-step-success">
+    <div class="feedback-num"><i class="ph ph-check"></i></div>
+    <div class="feedback-text">Validator passes</div>
+  </div>
+</div>
+
+<p><strong>Self-correction at scale.</strong> The AI never drifts because every mistake comes with its own explanation and remedy.</p>
+<p>For unattended refactoring using this pattern, see <a href="declarative-refactoring.html">Stop Planning, Start Looping</a>.</p>
+<h2 id="context-injection">Context Injection</h2><p>The AI can only reason about what it can see. Decision records work because you can inject them into context.</p>
+<p>Skill files do this automatically. When you invoke a skill, Claude Code loads the skill&#39;s files into context. Your decisions, templates, and examples become available for the AI to reference.</p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-lang">text</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-text">.claude/skills/convex-module/
+├── SKILL.md              # Entry point
+├── decisions/            # Decision records
+│   ├── INDEX.md          # Quick lookup
+│   ├── logic-separation.md
+│   └── schema-patterns.md
+├── templates/            # Code patterns
+└── validators/           # Enforcement scripts</code></pre>
+    </div><p>The AI doesn&#39;t memorise your conventions. It reads them when needed. The skill file says &quot;read these decisions before working on modules.&quot; The AI loads them, applies them, and the validators confirm compliance.</p>
+<p>You can also inject context explicitly: &quot;Read the decisions in <code>.claude/skills/convex-module/decisions/</code> before restructuring this module.&quot; The AI loads the files, understands the reasoning, and works accordingly.</p>
+<h2 id="plans-as-executable-specifications">Plans as Executable Specifications</h2><p>For larger work, decisions combine with plans. A plan is a structured document describing what to build, referencing decisions that apply.</p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-lang">markdown</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-markdown"># Plan: Restructure Hostaway Integration
+
+## Decisions to Follow
+- Read: decisions/api-entry-points.md
+- Read: decisions/submodule-depth.md
+- Read: decisions/workflow-patterns.md
+
+## Steps
+1. Create api.ts facade for public entry points
+2. Move webhooks to webhooks/ submodule
+3. Move rate sync to rates/ submodule
+4. Ensure max 3 levels of nesting
+5. Add CLAUDE.md documentation
+
+## Validation
+- Run: pnpm health-check --module hostaway
+- All validators must pass before completion</code></pre>
+    </div><p>The AI reads the plan, loads the referenced decisions, executes step by step, and validates after each change. The plan is an executable specification. Not instructions for a human to interpret, but a program for the AI to run.</p>
+<h2 id="the-collaborative-loop">The Collaborative Loop</h2><p>Decision records aren&#39;t just documentation you write for the AI. The AI participates in creating them.</p>
+<div class="collab-loop">
+  <div class="collab-step">
+    <div class="collab-icon" style="background: #14b8a6;"><i class="ph ph-magnifying-glass"></i></div>
+    <div class="collab-content">
+      <div class="collab-title">Identify</div>
+      <div class="collab-desc">AI spots inconsistency: "Some modules export from <code>schema.ts</code>, others from <code>types.ts</code>"</div>
+    </div>
+  </div>
+  <div class="collab-connector"><i class="ph ph-arrow-down"></i></div>
+  <div class="collab-step">
+    <div class="collab-icon" style="background: #3b82f6;"><i class="ph ph-chat-circle"></i></div>
+    <div class="collab-content">
+      <div class="collab-title">Collaborate</div>
+      <div class="collab-desc">AI drafts decision record. You discuss trade-offs, refine reasoning, agree on compliance criteria.</div>
+    </div>
+  </div>
+  <div class="collab-connector"><i class="ph ph-arrow-down"></i></div>
+  <div class="collab-step">
+    <div class="collab-icon" style="background: #a855f7;"><i class="ph ph-wrench"></i></div>
+    <div class="collab-content">
+      <div class="collab-title">Build</div>
+      <div class="collab-desc">AI writes validation rules enforcing the decision. These go into the linting scripts.</div>
+    </div>
+  </div>
+  <div class="collab-connector"><i class="ph ph-arrow-down"></i></div>
+  <div class="collab-step">
+    <div class="collab-icon" style="background: #f59e0b;"><i class="ph ph-code"></i></div>
+    <div class="collab-content">
+      <div class="collab-title">Apply</div>
+      <div class="collab-desc">AI updates codebase to match. The validators it just wrote confirm each file is correct.</div>
+    </div>
+  </div>
+  <div class="collab-connector collab-connector-loop"><i class="ph ph-arrow-bend-up-left"></i> <span>repeat</span></div>
+</div>
+
+<p>The AI becomes a participant in architecture, not just an executor. It spots patterns across more code than you read. It suggests decisions based on what it&#39;s seen work.</p>
+<h2 id="why-this-works">Why This Works</h2><p>AI agents are stateless. They can&#39;t remember. They can&#39;t learn from experience across sessions. Every limitation people complain about (inconsistency, drift, forgetting context) stems from this.</p>
+<p>Decisions + validators work around the limitation entirely:</p>
+<div class="transform-grid">
+  <div class="transform-card">
+    <div class="transform-old"><s>Can't remember</s></div>
+    <div class="transform-new">Reasoning is written down</div>
+  </div>
+  <div class="transform-card">
+    <div class="transform-old"><s>Can't learn</s></div>
+    <div class="transform-new">Conventions are documented</div>
+  </div>
+  <div class="transform-card">
+    <div class="transform-old"><s>Drifts over time</s></div>
+    <div class="transform-new">Validators catch deviations</div>
+  </div>
+</div>
+
+<p>You&#39;re not making the agent smarter. You&#39;re giving it external memory and external reasoning it can reference. The agent&#39;s capability stays the same, but its outputs become consistent because the inputs (decisions with clear reasoning) are consistent.</p>
+<p>This compounds over time. Each decision narrows the space of valid choices. The agent doesn&#39;t have to figure out the right approach from infinite possibilities. It reads the decisions and the right approach is specified. <strong>Better inputs, better outputs.</strong></p>
+<h2 id="getting-started">Getting Started</h2><div class="getting-started">
+  <div class="gs-item">
+    <div class="gs-num">1</div>
+    <div class="gs-content">
+      <strong>Start with what you repeat</strong>
+      <p>If you keep telling the AI "we do it this way because...", that's a decision record waiting to be written.</p>
+    </div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-num">2</div>
+    <div class="gs-content">
+      <strong>Write compliance first</strong>
+      <p>If you can't describe how to verify the decision, it's too vague. Validators need clear criteria.</p>
+    </div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-num">3</div>
+    <div class="gs-content">
+      <strong>Build validators incrementally</strong>
+      <p>Start with structure checks: does the file exist, is it in the right place. Add pattern checks as decisions accumulate.</p>
+    </div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-num">4</div>
+    <div class="gs-content">
+      <strong>Link templates to decisions</strong>
+      <p>When a template shows a pattern, link to the decision explaining why.</p>
+    </div>
+  </div>
+</div>
+
+<p>The first few decisions take effort. After that, the agent suggests new ones. It hits an edge case, asks how to handle it, and you realise there&#39;s a missing decision. Write it together, add the validator, continue.</p>
+<p>Each decision makes the agent more capable. Not smarter, more informed. The reasoning accumulates. The constraints tighten. Until the agent can&#39;t easily make a wrong choice, because the decisions specify what right looks like.</p>
+<p><strong>This is how you get long-term coherent reasoning from a stateless system. You externalise the reasoning.</strong></p>
+<p><strong>Decisions are all you need.</strong></p>
+
                     </div>
                 </article>
             </div>
 
             <!-- Right Column: Image + TOC -->
             <aside class="hidden lg:block">
-                ${meta.image ? `
+                
                 <div class="mb-8 rounded-xl overflow-hidden border border-dark-border shadow-lg">
-                    <img src="${meta.image}" alt="${meta.title}" class="w-full h-48 object-cover object-bottom">
+                    <img src="images/decisions-feature.svg" alt="Decisions Are All You Need" class="w-full h-48 object-cover object-bottom">
                 </div>
-                ` : ""}
+                
                 <div class="toc">
                     <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">On this page</h4>
                     <nav class="space-y-1">
-                        ${tocHtml}
+                        <a href="#the-memory-problem" class="toc-link ">The Memory Problem</a>
+<a href="#why-agents-need-decisions" class="toc-link ">Why Agents Need Decisions</a>
+<a href="#decision-records" class="toc-link ">Decision Records</a>
+<a href="#enforcement-validators-as-constraints" class="toc-link ">Enforcement: Validators as Constraints</a>
+<a href="#context-injection" class="toc-link ">Context Injection</a>
+<a href="#plans-as-executable-specifications" class="toc-link ">Plans as Executable Specifications</a>
+<a href="#the-collaborative-loop" class="toc-link ">The Collaborative Loop</a>
+<a href="#why-this-works" class="toc-link ">Why This Works</a>
+<a href="#getting-started" class="toc-link ">Getting Started</a>
                     </nav>
                 </div>
             </aside>
@@ -994,7 +1180,7 @@ function template(meta: ArticleMeta, content: string, toc: TocItem[]): string {
                     </div>
                     <span class="font-mono font-bold text-lg text-white">agentic<span class="text-brand-500">coding</span>.dev</span>
                 </div>
-                <p class="text-gray-600 text-sm">&copy; ${new Date().getFullYear()} AgenticCoding.dev. All rights reserved.</p>
+                <p class="text-gray-600 text-sm">&copy; 2026 AgenticCoding.dev. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -1084,56 +1270,4 @@ function template(meta: ArticleMeta, content: string, toc: TocItem[]): string {
     </script>
 
 </body>
-</html>`;
-}
-
-async function generateArticles() {
-  console.log("Generating articles...\n");
-
-  await mkdir(OUTPUT_DIR, { recursive: true });
-
-  const files = await readdir(ARTICLES_DIR);
-  const mdFiles = files.filter((f) => f.endsWith(".md"));
-
-  if (mdFiles.length === 0) {
-    console.log("No markdown files found in articles/");
-    return;
-  }
-
-  for (const file of mdFiles) {
-    const filepath = join(ARTICLES_DIR, file);
-    const raw = await readFile(filepath, "utf-8");
-
-    const { data, content } = matter(raw);
-
-    const slug = generateSlug(file);
-    const meta: ArticleMeta = {
-      title: data.title || slug.replace(/-/g, " "),
-      subtitle: data.subtitle,
-      date: data.date || new Date().toISOString().split("T")[0],
-      author: data.author,
-      tags: data.tags,
-      image: data.image,
-      slug,
-      readTime: estimateReadTime(content),
-      wordCount: countWords(content),
-    };
-
-    // Create custom renderer with TOC extraction
-    const toc: TocItem[] = [];
-    const renderer = createRenderer(toc);
-    marked.use({ renderer });
-
-    const htmlContent = await marked(content);
-    const html = template(meta, htmlContent, toc);
-
-    const outputPath = join(OUTPUT_DIR, `${slug}.html`);
-    await writeFile(outputPath, html);
-
-    console.log(`  ✓ ${file} -> ${slug}.html (${meta.wordCount} words, ${toc.length} sections)`);
-  }
-
-  console.log("\nDone!");
-}
-
-generateArticles().catch(console.error);
+</html>
