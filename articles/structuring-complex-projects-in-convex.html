@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structuring Complex Projects in Convex | AgenticCoding.dev</title>
+    <meta name="description" content="When your backend grows past a few files, Convex's file-based routing becomes a double-edged sword.">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            900: '#134e4a',
+                        },
+                        dark: {
+                            bg: '#0f172a',
+                            card: '#1e293b',
+                            border: '#334155',
+                        }
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #14b8a6, #3b82f6);
+            width: 0%;
+            z-index: 100;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Hero pattern */
+        .hero-pattern {
+            background-image: radial-gradient(circle at 1px 1px, #334155 1px, transparent 0);
+            background-size: 32px 32px;
+        }
+
+        /* Title */
+        .gradient-title {
+            color: #14b8a6;
+        }
+
+        /* Drop cap */
+        .prose > p:first-of-type::first-letter {
+            float: left;
+            font-size: 4rem;
+            line-height: 1;
+            font-weight: 700;
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            background: linear-gradient(135deg, #14b8a6, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Article prose styles */
+        .prose { max-width: 65ch; }
+        .prose h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: #14b8a6;
+            scroll-margin-top: 6rem;
+        }
+        .prose h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: #e2e8f0;
+            scroll-margin-top: 6rem;
+        }
+        .prose p { margin-bottom: 1.5rem; line-height: 1.8; color: #cbd5e1; }
+        .prose strong { color: #f8fafc; font-weight: 600; }
+        .prose em { color: #94a3b8; }
+        .prose a { color: #2dd4bf; text-decoration: underline; text-underline-offset: 3px; }
+        .prose a:hover { color: #14b8a6; }
+        .prose ul, .prose ol { margin-bottom: 1.5rem; padding-left: 1.5rem; color: #cbd5e1; }
+        .prose li { margin-bottom: 0.5rem; line-height: 1.8; }
+        .prose ul { list-style-type: disc; }
+        .prose ol { list-style-type: decimal; }
+
+        /* Images */
+        .prose img {
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+            margin: 2rem 0;
+            box-shadow: 0 0 40px rgba(20, 184, 166, 0.1);
+        }
+
+        /* Inline code */
+        .prose code:not(pre code) {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875em;
+            background: #1e293b;
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+            color: #2dd4bf;
+            border: 1px solid #334155;
+        }
+
+        /* Code block wrapper */
+        .code-block-wrapper {
+            position: relative;
+            margin-bottom: 2rem;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            background: #1e293b;
+            border: 1px solid #334155;
+            box-shadow: 0 0 40px rgba(20, 184, 166, 0.1);
+        }
+        .code-block-wrapper:hover {
+            box-shadow: 0 0 60px rgba(20, 184, 166, 0.15);
+            border-color: #475569;
+        }
+        .code-block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: #0f172a;
+            border-bottom: 1px solid #334155;
+        }
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .copy-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            color: #f8fafc;
+            border-color: #14b8a6;
+            background: #334155;
+        }
+        .copy-btn.copied {
+            color: #14b8a6;
+            border-color: #14b8a6;
+        }
+
+        /* Override Prism styles */
+        .code-block-wrapper pre {
+            margin: 0;
+            padding: 1.25rem;
+            background: transparent !important;
+            overflow-x: auto;
+        }
+        .code-block-wrapper pre code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            background: transparent !important;
+        }
+
+        .prose blockquote {
+            border-left: 3px solid #14b8a6;
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            color: #94a3b8;
+            font-style: italic;
+            background: linear-gradient(90deg, rgba(20, 184, 166, 0.1), transparent);
+            padding: 1rem 1.5rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+        .prose hr {
+            border: none;
+            border-top: 1px solid #334155;
+            margin: 3rem 0;
+        }
+
+        /* Table of contents */
+        .toc {
+            position: sticky;
+            top: 6rem;
+        }
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: #64748b;
+            font-size: 0.875rem;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+            margin-left: -1rem;
+            transition: all 0.2s;
+        }
+        .toc-link:hover {
+            color: #f8fafc;
+        }
+        .toc-link.active {
+            color: #14b8a6;
+            border-left-color: #14b8a6;
+        }
+        .toc-sub {
+            padding-left: 2rem;
+            font-size: 0.8125rem;
+        }
+
+        /* Back to top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3rem;
+            height: 3rem;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(1rem);
+            transition: all 0.3s;
+            z-index: 50;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .back-to-top:hover {
+            background: #334155;
+            color: #14b8a6;
+            border-color: #14b8a6;
+        }
+
+        /* Directory tree */
+        .dir-tree {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.8;
+            color: #cbd5e1;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .dir-tree .folder {
+            color: #3b82f6;
+        }
+        .dir-tree .file {
+            color: #94a3b8;
+        }
+        .dir-tree .comment {
+            color: #64748b;
+        }
+
+        /* Callout box */
+        .callout-box {
+            background: linear-gradient(135deg, #134e4a 0%, #1e293b 100%);
+            border: 1px solid #14b8a6;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        .callout-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #14b8a6;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+        .callout-title i {
+            font-size: 1.25rem;
+        }
+        .callout-content {
+            color: #e2e8f0;
+            line-height: 1.7;
+        }
+
+        /* Table styles */
+        .prose table {
+            width: 100%;
+            margin: 2rem 0;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        .prose th {
+            background: #1e293b;
+            color: #f8fafc;
+            font-weight: 600;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border: 1px solid #334155;
+        }
+        .prose td {
+            padding: 0.75rem 1rem;
+            border: 1px solid #334155;
+            color: #cbd5e1;
+        }
+        .prose tr:nth-child(even) {
+            background: rgba(30, 41, 59, 0.5);
+        }
+
+        /* Summary list */
+        .summary-list {
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .summary-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: #1e293b;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+        }
+        .summary-num {
+            width: 2rem;
+            height: 2rem;
+            background: #14b8a6;
+            color: #0f172a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+        .summary-content {
+            flex: 1;
+        }
+        .summary-content strong {
+            color: #f8fafc;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .summary-content p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="antialiased font-sans selection:bg-brand-500 selection:text-white">
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progress"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-dark-bg/80 backdrop-blur-md border-b border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="../index.html" class="flex-shrink-0 flex items-center gap-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-mono font-bold text-lg">
+                        &lt;/&gt;
+                    </div>
+                    <span class="font-mono font-bold text-xl tracking-tight text-white">agentic<span class="text-brand-500">coding</span>.dev</span>
+                </a>
+
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="../index.html#episodes" class="hover:text-brand-500 hover:bg-dark-card px-3 py-2 rounded-md text-sm font-medium transition-colors">Podcast</a>
+                        <a href="../index.html#articles" class="hover:text-brand-500 hover:bg-dark-card px-3 py-2 rounded-md text-sm font-medium transition-colors">Articles</a>
+                        <a href="../index.html#about" class="hover:text-brand-500 hover:bg-dark-card px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                        <a href="../index.html#newsletter" class="bg-brand-600 hover:bg-brand-500 text-white px-4 py-2 rounded-md text-sm font-bold shadow-lg shadow-brand-500/20 transition-all">Subscribe</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 lg:pt-32 pb-20">
+        <div class="lg:grid lg:grid-cols-[1fr_300px] lg:gap-12">
+
+            <!-- Left Column: Header + Article -->
+            <div>
+                <!-- Article Header -->
+                <header class="mb-12">
+                    <a href="../index.html#articles" class="inline-flex items-center text-sm text-gray-400 hover:text-brand-500 mb-6 transition-colors">
+                        <i class="ph ph-arrow-left mr-2"></i> Back to articles
+                    </a>
+
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-title mb-4 leading-tight animate-in">
+                        Structuring Complex Projects in Convex
+                    </h1>
+
+                    <p class="text-xl text-white mb-6 animate-in" style="animation-delay: 0.1s">When your backend grows past a few files, Convex's file-based routing becomes a double-edged sword.</p>
+
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 font-mono animate-in" style="animation-delay: 0.2s">
+                        <span>03 Feb 2025</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+                        <span>12 min read</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+                        <span>2,400 words</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+                        <div class="flex gap-2">
+                            <span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">convex</span>
+                            <span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">architecture</span>
+                            <span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">backend</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Article Content -->
+                <article class="max-w-3xl">
+                    <div class="prose">
+
+<h2 id="the-problem-nobody-warns-you-about">The Problem Nobody Warns You About</h2>
+
+<p>Convex's magic is that you write functions, and they become APIs. No routes to configure, no deployment to manage. But as your project grows from 10 functions to 100, that magic starts to feel less like convenience and more like chaos.</p>
+
+<p>And it's not just functions. Your schema starts as a single file defining a few tables. Then you add indexes. Then validators for shared field types. Then more tables. Before long, <code>schema.ts</code> is 4,000 lines and neither you nor your agent can find anything. The same thing happens with webhooks, workflows, and scheduled jobs - each one simple in isolation, collectively a mess.</p>
+
+<p>I hit this wall building a property management system. What started as a handful of files in a flat <code>convex/</code> directory evolved into a sprawl where related code was scattered across dozens of files. The file-based routing that felt so natural at 500 lines became a liability at 5,000.</p>
+
+<p>The problem isn't Convex - it's that Convex's flexibility means you have to make structural decisions it won't make for you. And if you get those decisions wrong early, you're looking at a painful refactor later.</p>
+
+<h2 id="the-core-insight">The Core Insight: Modular Like a Microservice</h2>
+
+<p>The fix is to structure your Convex backend like you'd structure microservices - but without actually splitting it into separate services.</p>
+
+<p>Each module owns a domain concept: rentals, reservations, reports, whatever. It owns the schema for that concept. It exposes functions for the frontend to call. From the outside, each module is a black box - clear ownership, clear boundaries.</p>
+
+<div class="callout-box">
+    <div class="callout-title"><i class="ph ph-lightbulb"></i> The Key Benefit</div>
+    <div class="callout-content">This gives you the organisational benefits of microservices - clear ownership, independent reasoning, explicit boundaries - without the operational overhead. No network calls between services. No distributed transactions. No deployment coordination. You get the boundary discipline while Convex handles it all as one backend.</div>
+</div>
+
+<h2 id="domains-grouping-related-modules">Domains: Grouping Related Modules</h2>
+
+<p>Before diving into module structure, there's one level above: <strong>domains</strong>. Domains group related modules by business area.</p>
+
+<div class="dir-tree">
+<span class="folder">convex/</span>
+├── <span class="folder">core/</span>           <span class="comment"># Core business entities</span>
+│   ├── <span class="folder">rentals/</span>
+│   └── <span class="folder">reservations/</span>
+├── <span class="folder">integrations/</span>   <span class="comment"># External service connections</span>
+│   ├── <span class="folder">hostaway/</span>
+│   └── <span class="folder">slack/</span>
+├── <span class="folder">revenue/</span>        <span class="comment"># Financial operations</span>
+│   ├── <span class="folder">rates/</span>
+│   └── <span class="folder">reports/</span>
+└── <span class="folder">system/</span>         <span class="comment"># Infrastructure & auth</span>
+    ├── <span class="folder">organizations/</span>
+    └── <span class="folder">users/</span>
+</div>
+
+<p>The domain names aren't magic - use whatever makes sense for your business. The point is grouping modules that change together and share concepts. When you're working on pricing, you're probably touching <code>revenue/rates/</code> and <code>revenue/reports/</code>, not <code>integrations/slack/</code>.</p>
+
+<p>This two-level hierarchy - domain, then module - keeps navigation manageable even as the codebase grows. You know where to look without searching.</p>
+
+<h2 id="module-structure">Module Structure: The Minimum Viable Pattern</h2>
+
+<p>Every module needs at least three files:</p>
+
+<div class="dir-tree">
+<span class="folder">convex/core/rentals/</span>
+├── <span class="file">api.ts</span>          <span class="comment"># Public interface (thin wrappers)</span>
+├── <span class="file">functions.ts</span>    <span class="comment"># All implementations</span>
+└── <span class="file">schema.ts</span>       <span class="comment"># Tables, indexes, validators</span>
+</div>
+
+<p><code>schema.ts</code> owns the data - tables, indexes, and shared validators. <code>api.ts</code> is the public interface - thin wrappers that handle auth and delegate to the implementations. <code>functions.ts</code> contains all the actual query, mutation, and action logic.</p>
+
+<p><strong>The key insight: <code>api.ts</code> is always thin.</strong> It re-exports queries directly and wraps mutations/actions to add auth context before delegating. The real work happens in <code>functions.ts</code>. Having all public functions in one file also makes it easy to audit - you can verify every exposed endpoint has appropriate auth in a single glance.</p>
+
+<p>When <code>functions.ts</code> exceeds ~500 lines, split it into a folder. How you split is up to you - organise by whatever makes the code easiest to navigate.</p>
+
+<h3 id="by-function-type">By function type (public vs internal):</h3>
+
+<div class="dir-tree">
+<span class="folder">convex/core/rentals/</span>
+├── <span class="file">api.ts</span>
+├── <span class="folder">functions/</span>
+│   ├── <span class="file">internalMutations.ts</span>
+│   └── <span class="file">publicQueries.ts</span>
+└── <span class="file">schema.ts</span>
+</div>
+
+<h3 id="by-feature">By feature or entity:</h3>
+
+<div class="dir-tree">
+<span class="folder">convex/integrations/slack/</span>
+├── <span class="file">api.ts</span>
+├── <span class="folder">functions/</span>
+│   ├── <span class="file">channels.ts</span>
+│   ├── <span class="file">sendMessage.ts</span>
+│   └── <span class="file">templates.ts</span>
+└── <span class="file">schema.ts</span>
+</div>
+
+<p>Both work. The first makes sense when public/internal is your main distinction. The second makes sense when features are more meaningful - all the channel logic in one place, all the messaging logic in another. Pick what helps you find things.</p>
+
+<h2 id="separating-pure-logic">Separating Pure Logic: The _logic/ Pattern</h2>
+
+<p>Once a module grows complex - especially if it involves calculations, rule evaluation, or data transformation - you'll want to separate pure business logic from Convex functions.</p>
+
+<div class="dir-tree">
+<span class="folder">convex/revenue/rates/</span>
+├── <span class="folder">functions/</span>
+│   ├── <span class="file">publicQueries.ts</span>
+│   └── <span class="file">internalMutations.ts</span>
+└── <span class="folder">_logic/</span>
+    ├── <span class="file">calculations.ts</span>       <span class="comment"># Pure functions</span>
+    ├── <span class="file">inheritance.ts</span>        <span class="comment"># Rule resolution</span>
+    └── <span class="folder">__tests__/</span>
+        └── <span class="file">calculations.test.ts</span>
+</div>
+
+<p>The <code>_logic/</code> directory has one iron rule: <strong>no Convex context</strong>. No <code>ctx.db</code>, no <code>MutationCtx</code>, no framework imports. Just pure TypeScript functions that take data in and return data out.</p>
+
+<p>Why does this matter? Because testing pure functions is trivial. No mocking, no test harnesses, no Convex runtime. You can achieve 80%+ coverage on your business logic with fast unit tests.</p>
+
+<p>The Convex functions in <code>functions/</code> become thin orchestrators - fetch data, call logic, persist results. The actual brains live in <code>_logic/</code>, where they're easy to understand and test.</p>
+
+<div class="code-block-wrapper">
+    <div class="code-block-header">
+        <span class="code-lang">typescript</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+            <i class="ph ph-copy"></i>
+            <span>Copy</span>
+        </button>
+    </div>
+    <pre><code class="language-typescript">// _logic/calculations.ts
+export function calculateEffectiveRate(
+  baseRate: number,
+  adjustments: RateAdjustment[]
+): number {
+  return adjustments.reduce((rate, adj) => applyAdjustment(rate, adj), baseRate);
+}
+
+// functions/internalMutations.ts
+export const setRate = internalMutation({
+  args: { rentalId: v.id("rentals"), baseRate: v.number(), adjustments: v.array(...) },
+  handler: async (ctx, args) => {
+    const effectiveRate = calculateEffectiveRate(args.baseRate, args.adjustments);
+    await ctx.db.insert("rates", { ...args, effectiveRate });
+  },
+});</code></pre>
+</div>
+
+<h2 id="node-runtime-split">The Node.js Runtime Split</h2>
+
+<p>Most Convex code runs in Convex's default JavaScript runtime. But some operations need Node.js - encryption, file system access, npm packages with native dependencies. Convex supports this with the <code>"use node"</code> directive.</p>
+
+<p>The catch: files with <code>"use node"</code> must be completely isolated. Non-Node files can't import from them - not even types. The bundler follows import chains, and if it finds a Node.js built-in in a non-Node bundle, it fails.</p>
+
+<p>The cleanest solution is structural: put all Node.js code in a <code>node/</code> directory.</p>
+
+<div class="dir-tree">
+<span class="folder">convex/integrations/slack/</span>
+├── <span class="file">api.ts</span>              <span class="comment"># Public queries, mutations (non-Node)</span>
+├── <span class="file">functions.ts</span>        <span class="comment"># Internal functions (non-Node)</span>
+├── <span class="folder">node/</span>
+│   ├── <span class="file">actions.ts</span>      <span class="comment"># Public Node actions ("use node")</span>
+│   └── <span class="file">internal.ts</span>     <span class="comment"># Internal Node functions ("use node")</span>
+├── <span class="file">schema.ts</span>
+└── <span class="folder">_logic/</span>             <span class="comment"># Pure logic (shared by both runtimes)</span>
+</div>
+
+<p>Everything in <code>node/</code> has <code>"use node"</code> at the top. Everything outside <code>node/</code> doesn't. The separation is physical, not just convention - you can lint it. Pure logic in <code>_logic/</code> stays at the module root, shared by both runtimes.</p>
+
+<p><strong>API paths are explicit:</strong></p>
+
+<div class="code-block-wrapper">
+    <div class="code-block-header">
+        <span class="code-lang">typescript</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+            <i class="ph ph-copy"></i>
+            <span>Copy</span>
+        </button>
+    </div>
+    <pre><code class="language-typescript">// Non-Node (via api.ts)
+api.integrations.slack.api.getChannels
+
+// Node (via node/)
+api.integrations.slack.node.actions.sendMessage</code></pre>
+</div>
+
+<p>The <code>node</code> segment tells you exactly what runtime you're invoking. No ambiguity.</p>
+
+<h2 id="multi-tenancy">Multi-Tenancy: Security by Structure</h2>
+
+<p>If you're building a SaaS, every query on tenant data needs to filter by <code>organizationId</code>. This sounds simple until you have 50 tables and 200 queries.</p>
+
+<p>The pattern I've settled on: <strong>org-scoped indexes as the only indexes</strong> on tenant tables.</p>
+
+<div class="code-block-wrapper">
+    <div class="code-block-header">
+        <span class="code-lang">typescript</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+            <i class="ph ph-copy"></i>
+            <span>Copy</span>
+        </button>
+    </div>
+    <pre><code class="language-typescript">// Correct - single org-scoped index
+forecastModelRows: defineTable({ ... })
+  .index("by_org_model_month", ["organizationId", "modelId", "month"])
+
+// Wrong - duplicate indexes (wasteful and dangerous)
+forecastModelRows: defineTable({ ... })
+  .index("by_org_model_month", ["organizationId", "modelId", "month"])
+  .index("by_model_month", ["modelId", "month"])  // Why does this exist?</code></pre>
+</div>
+
+<p>If you can't query tenant data without an <code>organizationId</code>, you can't accidentally leak data between tenants. The structure makes the bug impossible.</p>
+
+<p>This extends to function wrappers. Instead of manually checking auth in every function, use wrappers that inject org context:</p>
+
+<div class="code-block-wrapper">
+    <div class="code-block-header">
+        <span class="code-lang">typescript</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+            <i class="ph ph-copy"></i>
+            <span>Copy</span>
+        </button>
+    </div>
+    <pre><code class="language-typescript">export const listRates = orgQuery({
+  args: {},
+  handler: async (ctx, args, orgContext) => {
+    const { organizationId } = orgContext;
+    return ctx.db
+      .query("rates")
+      .withIndex("by_org", (q) => q.eq("organizationId", organizationId))
+      .collect();
+  },
+});</code></pre>
+</div>
+
+<p>The wrapper handles authentication, retrieves the user's organization, and passes it as the third parameter. No way to forget the org filter because it's structurally required. You can even add linting rules to enforce that all functions in <code>api.ts</code> use org wrappers - turning a security requirement into a build-time check.</p>
+
+<h2 id="depth-limits">Depth Limits: When Structure Becomes Overhead</h2>
+
+<p>There's a point where organisation becomes over-organisation. We cap module depth at three levels:</p>
+
+<div class="dir-tree">
+<span class="folder">convex/</span>               <span class="comment"># Level 0 (root)</span>
+├── <span class="folder">integrations/</span>     <span class="comment"># Level 1 (domain)</span>
+│   └── <span class="folder">hostaway/</span>     <span class="comment"># Level 2 (module)</span>
+│       └── <span class="folder">webhooks/</span> <span class="comment"># Level 3 (submodule) - Maximum</span>
+</div>
+
+<p>Beyond three levels, searching becomes faster than navigating. If you find yourself creating Level 4 directories, it's time to flatten or extract. A file called <code>feeCorrectionMutations.ts</code> is easier to find than a directory called <code>feeCorrection/</code> containing <code>mutations.ts</code>.</p>
+
+<h2 id="validators-and-types">Validators in Schema, Types in types.ts</h2>
+
+<p>Convex validators (<code>v.string()</code>, <code>v.object()</code>, etc.) belong in <code>schema.ts</code> alongside table definitions. This keeps the shape of your data in one place.</p>
+
+<div class="code-block-wrapper">
+    <div class="code-block-header">
+        <span class="code-lang">typescript</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+            <i class="ph ph-copy"></i>
+            <span>Copy</span>
+        </button>
+    </div>
+    <pre><code class="language-typescript">// schema.ts
+export const levelValidator = v.union(
+  v.literal("portfolio"),
+  v.literal("group"),
+  v.literal("rental")
+);
+
+export const moduleTables = {
+  reports: defineTable({
+    level: levelValidator,
+    // ...
+  }),
+};</code></pre>
+</div>
+
+<p>TypeScript types are a different concern. If you need types for external API responses (integration modules) or for sharing between Node.js and Convex runtimes, put them in a separate <code>types.ts</code>.</p>
+
+<p>But don't create <code>types.ts</code> just to have types. Derive them from validators using <code>Infer&lt;&gt;</code>:</p>
+
+<div class="code-block-wrapper">
+    <div class="code-block-header">
+        <span class="code-lang">typescript</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+            <i class="ph ph-copy"></i>
+            <span>Copy</span>
+        </button>
+    </div>
+    <pre><code class="language-typescript">import { Infer } from "convex/values";
+
+export type Level = Infer&lt;typeof levelValidator&gt;;
+// Result: type Level = "portfolio" | "group" | "rental"</code></pre>
+</div>
+
+<h2 id="summary">Summary: The Decisions That Scale</h2>
+
+<p>After building systems to 20+ modules and 50+ tables, here's what actually matters:</p>
+
+<div class="summary-list">
+    <div class="summary-item">
+        <div class="summary-num">1</div>
+        <div class="summary-content">
+            <strong>Think in modules, not files</strong>
+            <p>Every cohesive concept gets its own directory with schema, api, and functions.</p>
+        </div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-num">2</div>
+        <div class="summary-content">
+            <strong>Separate public from internal</strong>
+            <p><code>api.ts</code> is thin wrappers only - easy to audit for auth. Business logic lives in internal functions.</p>
+        </div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-num">3</div>
+        <div class="summary-content">
+            <strong>Extract pure logic</strong>
+            <p>Anything that doesn't need <code>ctx</code> belongs in <code>_logic/</code> where it can be unit tested.</p>
+        </div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-num">4</div>
+        <div class="summary-content">
+            <strong>Isolate Node.js code</strong>
+            <p>Everything in <code>node/</code> has <code>"use node"</code>. Everything outside doesn't. Physical separation, not convention.</p>
+        </div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-num">5</div>
+        <div class="summary-content">
+            <strong>Enforce multi-tenancy structurally</strong>
+            <p>Org-scoped indexes as the only indexes on tenant data. Org wrappers on all public functions.</p>
+        </div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-num">6</div>
+        <div class="summary-content">
+            <strong>Cap depth at three levels</strong>
+            <p>Beyond that, you're creating work, not reducing it.</p>
+        </div>
+    </div>
+</div>
+
+<p>None of this is specific to Convex - it's standard backend architecture applied to a file-based routing system. The difference is that Convex won't force these patterns on you. You have to choose them.</p>
+
+<p><strong>And that choice, made early, is the difference between a codebase that scales and one that becomes a burden.</strong></p>
+
+<h2 id="enforcing-these-patterns">Enforcing These Patterns</h2>
+
+<p>I've built a Claude Code skill that validates all of these conventions automatically. Every time the agent creates or edits a file, the skill checks compliance. If something violates a pattern, the edit fails - and the agent receives immediate feedback explaining what went wrong, why it matters, and how to fix it. I've used this for <a href="declarative-refactoring.html">massive refactors</a> with 100% success rate and zero input required.</p>
+
+<p>If you'd like free access to the skill, <a href="https://www.linkedin.com/in/chrispoulterai/" target="_blank" rel="noopener noreferrer">reach out on LinkedIn</a>.</p>
+
+                    </div>
+                </article>
+            </div>
+
+            <!-- Right Column: Image + TOC -->
+            <aside class="hidden lg:block">
+
+                <div class="mb-8 rounded-xl overflow-hidden border border-dark-border shadow-lg">
+                    <img src="images/convex-structure-feature.svg" alt="Structuring Complex Projects in Convex" class="w-full h-48 object-cover object-bottom">
+                </div>
+
+                <div class="toc">
+                    <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">On this page</h4>
+                    <nav class="space-y-1">
+                        <a href="#the-problem-nobody-warns-you-about" class="toc-link">The Problem Nobody Warns You About</a>
+                        <a href="#the-core-insight" class="toc-link">The Core Insight</a>
+                        <a href="#domains-grouping-related-modules" class="toc-link">Domains: Grouping Related Modules</a>
+                        <a href="#module-structure" class="toc-link">Module Structure</a>
+                        <a href="#separating-pure-logic" class="toc-link">Separating Pure Logic</a>
+                        <a href="#node-runtime-split" class="toc-link">The Node.js Runtime Split</a>
+                        <a href="#multi-tenancy" class="toc-link">Multi-Tenancy</a>
+                        <a href="#depth-limits" class="toc-link">Depth Limits</a>
+                        <a href="#validators-and-types" class="toc-link">Validators and Types</a>
+                        <a href="#summary" class="toc-link">Summary</a>
+                        <a href="#enforcing-these-patterns" class="toc-link">Enforcing These Patterns</a>
+                    </nav>
+                </div>
+            </aside>
+
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="ph ph-arrow-up text-xl"></i>
+    </button>
+
+    <!-- Footer -->
+    <footer class="bg-dark-bg border-t border-dark-border pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-brand-500 rounded flex items-center justify-center text-white font-mono font-bold text-xs">
+                        &lt;/&gt;
+                    </div>
+                    <span class="font-mono font-bold text-lg text-white">agentic<span class="text-brand-500">coding</span>.dev</span>
+                </div>
+                <p class="text-gray-600 text-sm">&copy; 2026 AgenticCoding.dev. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Copy code functionality
+        function copyCode(btn) {
+            const wrapper = btn.closest('.code-block-wrapper');
+            const code = wrapper.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.classList.add('copied');
+                btn.querySelector('span').textContent = 'Copied!';
+                btn.querySelector('i').className = 'ph ph-check';
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.querySelector('span').textContent = 'Copy';
+                    btn.querySelector('i').className = 'ph ph-copy';
+                }, 2000);
+            });
+        }
+
+        // Progress bar
+        const progress = document.getElementById('progress');
+        const article = document.querySelector('article');
+
+        function updateProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = article.offsetHeight + article.offsetTop - window.innerHeight;
+            const scrollPercent = Math.min((scrollTop / docHeight) * 100, 100);
+            progress.style.width = scrollPercent + '%';
+        }
+
+        // Back to top visibility
+        const backToTop = document.getElementById('backToTop');
+
+        function updateBackToTop() {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        }
+
+        // TOC active state
+        const tocLinks = document.querySelectorAll('.toc-link');
+        const headings = document.querySelectorAll('.prose h2, .prose h3');
+
+        function updateToc() {
+            const scrollPos = window.scrollY + 150;
+
+            let current = '';
+            headings.forEach(heading => {
+                if (heading.offsetTop <= scrollPos) {
+                    current = heading.id;
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Throttle scroll events
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateProgress();
+                    updateBackToTop();
+                    updateToc();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Initial calls
+        updateProgress();
+        updateBackToTop();
+        updateToc();
+
+        // Highlight code on load
+        Prism.highlightAll();
+    </script>
+
+</body>
+</html>
