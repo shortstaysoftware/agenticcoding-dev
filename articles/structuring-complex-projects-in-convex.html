@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Structuring Complex Projects in Convex | AgenticCoding.dev</title>
-    <meta name="description" content="When your backend grows past a few files, Convex's file-based routing becomes a double-edged sword.">
+    <meta name="description" content="When your backend grows past a few files, Convex's file-based routing becomes a double-edged sword">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -285,28 +285,272 @@
             border-color: #14b8a6;
         }
 
-        /* Directory tree */
-        .dir-tree {
+        /* Diagram styles */
+        .diagram {
             background: #1e293b;
             border: 1px solid #334155;
             border-radius: 0.75rem;
-            padding: 1.5rem;
+            padding: 2rem;
             margin: 2rem 0;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
-            line-height: 1.8;
-            color: #cbd5e1;
             overflow-x: auto;
-            white-space: pre;
         }
-        .dir-tree .folder {
-            color: #3b82f6;
+        .diagram svg {
+            max-width: 100%;
+            height: auto;
         }
-        .dir-tree .file {
+
+        /* Component grid (Skill + Validators + Hook) */
+        .component-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            gap: 0.75rem;
+            align-items: stretch;
+            margin: 2rem 0;
+        }
+        @media (max-width: 768px) {
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+            .component-arrow {
+                transform: rotate(90deg);
+                justify-self: center;
+            }
+        }
+        .component-card {
+            background: #1e293b;
+            border: 2px solid;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        .component-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+        .component-header i {
+            font-size: 1.1rem;
+        }
+        .component-body {
+            padding: 1rem;
+        }
+        .component-body p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+        .component-body code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            background: #0f172a;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            color: #64748b;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        .component-arrow {
+            display: flex;
+            align-items: center;
+            color: #475569;
+            font-size: 1.25rem;
+        }
+
+        /* Loop visual options */
+        .loop-option {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+        }
+        .loop-option-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #a855f7;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #334155;
+        }
+        .loop-problem { color: #f87171; }
+        .loop-success { color: #2dd4bf; }
+
+        /* Option 1: Comparison bars */
+        .loop-compare {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .loop-compare-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background: #0f172a;
+        }
+        .loop-compare-old { border-left: 3px solid #ef4444; }
+        .loop-compare-new { border-left: 3px solid #14b8a6; }
+        .loop-compare-label {
+            font-weight: 700;
+            font-size: 0.8rem;
+            min-width: 5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+        .loop-compare-old .loop-compare-label { color: #f87171; }
+        .loop-compare-new .loop-compare-label { color: #2dd4bf; }
+        .loop-compare-steps {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
             color: #94a3b8;
         }
-        .dir-tree .comment {
+        .loop-compare-steps span {
+            padding: 0.25rem 0.5rem;
+            background: #1e293b;
+            border-radius: 0.25rem;
+        }
+        .loop-compare-steps span::after {
+            content: ' →';
+            color: #475569;
+            margin-left: 0.25rem;
+        }
+        .loop-compare-steps span:last-child::after {
+            content: '';
+        }
+
+        /* Option 2: Circular loop */
+        .loop-circle {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 1rem auto;
+        }
+        .loop-circle-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #14b8a6;
+        }
+        .loop-circle-center i {
+            font-size: 2rem;
+            display: block;
+        }
+        .loop-circle-center span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .loop-circle-item {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            background: #0f172a;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+        }
+        .loop-circle-item i {
+            font-size: 1.25rem;
+            color: #14b8a6;
+        }
+        .loop-circle-1 { top: -10px; left: 50%; transform: translateX(-50%); }
+        .loop-circle-2 { top: 50%; right: -20px; transform: translateY(-50%); }
+        .loop-circle-3 { bottom: -10px; left: 50%; transform: translateX(-50%); }
+        .loop-circle-4 { top: 50%; left: -15px; transform: translateY(-50%); }
+        .loop-circle-arrows {
+            position: absolute;
+            inset: 10px;
+            width: calc(100% - 20px);
+            height: calc(100% - 20px);
+        }
+
+        /* Terminal visualization */
+        .loop-terminal {
+            background: #0f172a;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            border: 1px solid #334155;
+            margin: 2rem 0;
+        }
+        .loop-terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+        .loop-terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .loop-terminal-title {
+            margin-left: auto;
             color: #64748b;
+            font-size: 0.7rem;
+        }
+        .loop-terminal-body {
+            padding: 1rem;
+        }
+        .loop-terminal-line {
+            padding: 0.25rem 0;
+            color: #e2e8f0;
+        }
+        .loop-terminal-prompt {
+            color: #14b8a6;
+            margin-right: 0.5rem;
+        }
+        .loop-terminal-dim {
+            color: #64748b;
+        }
+        .loop-terminal-muted {
+            color: #475569;
+            font-style: italic;
+            margin: 0.5rem 0;
+        }
+        .loop-terminal-hook {
+            color: #a855f7;
+        }
+        .loop-terminal-badge {
+            background: #a855f7;
+            color: #0f172a;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+        .loop-terminal-error {
+            color: #f87171;
+        }
+        .loop-terminal-success {
+            color: #2dd4bf;
+        }
+        .loop-terminal-label {
+            color: #64748b;
+            margin-right: 0.5rem;
         }
 
         /* Callout box */
@@ -334,38 +578,173 @@
             line-height: 1.7;
         }
 
-        /* Table styles */
-        .prose table {
-            width: 100%;
+        /* Feedback loop steps */
+        .feedback-loop {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
             margin: 2rem 0;
-            border-collapse: collapse;
-            font-size: 0.875rem;
-        }
-        .prose th {
+            padding: 1.5rem;
             background: #1e293b;
-            color: #f8fafc;
-            font-weight: 600;
-            text-align: left;
-            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
             border: 1px solid #334155;
         }
-        .prose td {
-            padding: 0.75rem 1rem;
+        .feedback-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: #0f172a;
+            border-radius: 0.5rem;
             border: 1px solid #334155;
+        }
+        .feedback-step-highlight {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .feedback-step-success {
+            border-color: #14b8a6;
+            background: rgba(20, 184, 166, 0.1);
+        }
+        .feedback-num {
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #334155;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+        .feedback-step-success .feedback-num {
+            background: #14b8a6;
+            color: #0f172a;
+        }
+        .feedback-text {
+            font-size: 0.8rem;
             color: #cbd5e1;
         }
-        .prose tr:nth-child(even) {
-            background: rgba(30, 41, 59, 0.5);
+        .feedback-arrow {
+            color: #475569;
+            font-size: 0.875rem;
+        }
+        @media (max-width: 768px) {
+            .feedback-loop {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .feedback-arrow {
+                transform: rotate(90deg);
+                align-self: center;
+            }
         }
 
-        /* Summary list */
-        .summary-list {
+        /* Collaborative loop */
+        .collab-loop {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #1e293b;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+        }
+        .collab-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .collab-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #0f172a;
+            font-size: 1.25rem;
+        }
+        .collab-content {
+            flex: 1;
+        }
+        .collab-title {
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 0.25rem;
+        }
+        .collab-desc {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+        .collab-desc code {
+            font-size: 0.8rem;
+            background: #0f172a;
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            color: #64748b;
+        }
+        .collab-connector {
+            padding: 0.5rem 0 0.5rem 0.85rem;
+            color: #475569;
+        }
+        .collab-connector-loop {
+            color: #14b8a6;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .collab-connector-loop span {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Transform grid */
+        .transform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        @media (max-width: 768px) {
+            .transform-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .transform-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        .transform-old {
+            color: #f87171;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+        .transform-old s {
+            text-decoration: line-through;
+            text-decoration-color: #ef4444;
+        }
+        .transform-new {
+            color: #14b8a6;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Getting started */
+        .getting-started {
             margin: 2rem 0;
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
-        .summary-item {
+        .gs-item {
             display: flex;
             gap: 1rem;
             padding: 1rem 1.25rem;
@@ -373,7 +752,7 @@
             border-radius: 0.75rem;
             border: 1px solid #334155;
         }
-        .summary-num {
+        .gs-num {
             width: 2rem;
             height: 2rem;
             background: #14b8a6;
@@ -386,15 +765,15 @@
             font-size: 0.875rem;
             flex-shrink: 0;
         }
-        .summary-content {
+        .gs-content {
             flex: 1;
         }
-        .summary-content strong {
+        .gs-content strong {
             color: #f8fafc;
             display: block;
             margin-bottom: 0.25rem;
         }
-        .summary-content p {
+        .gs-content p {
             margin: 0;
             font-size: 0.875rem;
             color: #94a3b8;
@@ -461,217 +840,240 @@
                         Structuring Complex Projects in Convex
                     </h1>
 
-                    <p class="text-xl text-white mb-6 animate-in" style="animation-delay: 0.1s">When your backend grows past a few files, Convex's file-based routing becomes a double-edged sword.</p>
+                    <p class="text-xl text-white mb-6 animate-in" style="animation-delay: 0.1s">When your backend grows past a few files, Convex's file-based routing becomes a double-edged sword</p>
 
                     <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 font-mono animate-in" style="animation-delay: 0.2s">
-                        <span>03 Feb 2025</span>
+                        <span>03 Feb 2026</span>
                         <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                        <span>12 min read</span>
+                        <span>10 min read</span>
                         <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                        <span>2,400 words</span>
-                        <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                        <div class="flex gap-2">
-                            <span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">convex</span>
-                            <span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">architecture</span>
-                            <span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">backend</span>
-                        </div>
+                        <span>1,856 words</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-600"></span><div class="flex gap-2"><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">convex</span><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">architecture</span><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">patterns</span></div>
                     </div>
                 </header>
 
                 <!-- Article Content -->
                 <article class="max-w-3xl">
                     <div class="prose">
-
-<h2 id="the-problem-nobody-warns-you-about">The Problem Nobody Warns You About</h2>
-
-<p>Convex's magic is that you write functions, and they become APIs. No routes to configure, no deployment to manage. But as your project grows from 10 functions to 100, that magic starts to feel less like convenience and more like chaos.</p>
-
-<p>And it's not just functions. Your schema starts as a single file defining a few tables. Then you add indexes. Then validators for shared field types. Then more tables. Before long, <code>schema.ts</code> is 4,000 lines and neither you nor your agent can find anything. The same thing happens with webhooks, workflows, and scheduled jobs - each one simple in isolation, collectively a mess.</p>
-
-<p>I hit this wall building a property management system. What started as a handful of files in a flat <code>convex/</code> directory evolved into a sprawl where related code was scattered across dozens of files. The file-based routing that felt so natural at 500 lines became a liability at 5,000.</p>
-
-<p>The problem isn't Convex - it's that Convex's flexibility means you have to make structural decisions it won't make for you. And if you get those decisions wrong early, you're looking at a painful refactor later.</p>
-
-<h2 id="the-core-insight">The Core Insight: Modular Like a Microservice</h2>
-
-<p>The fix is to structure your Convex backend like you'd structure microservices - but without actually splitting it into separate services.</p>
-
-<p>Each module owns a domain concept: rentals, reservations, reports, whatever. It owns the schema for that concept. It exposes functions for the frontend to call. From the outside, each module is a black box - clear ownership, clear boundaries.</p>
-
-<div class="callout-box">
-    <div class="callout-title"><i class="ph ph-lightbulb"></i> The Key Benefit</div>
-    <div class="callout-content">This gives you the organisational benefits of microservices - clear ownership, independent reasoning, explicit boundaries - without the operational overhead. No network calls between services. No distributed transactions. No deployment coordination. You get the boundary discipline while Convex handles it all as one backend.</div>
-</div>
-
-<h2 id="domains-grouping-related-modules">Domains: Grouping Related Modules</h2>
-
-<p>Before diving into module structure, there's one level above: <strong>domains</strong>. Domains group related modules by business area.</p>
-
-<div class="dir-tree">
-<span class="folder">convex/</span>
-├── <span class="folder">core/</span>           <span class="comment"># Core business entities</span>
-│   ├── <span class="folder">rentals/</span>
-│   └── <span class="folder">reservations/</span>
-├── <span class="folder">integrations/</span>   <span class="comment"># External service connections</span>
-│   ├── <span class="folder">hostaway/</span>
-│   └── <span class="folder">slack/</span>
-├── <span class="folder">revenue/</span>        <span class="comment"># Financial operations</span>
-│   ├── <span class="folder">rates/</span>
-│   └── <span class="folder">reports/</span>
-└── <span class="folder">system/</span>         <span class="comment"># Infrastructure & auth</span>
-    ├── <span class="folder">organizations/</span>
-    └── <span class="folder">users/</span>
-</div>
-
-<p>The domain names aren't magic - use whatever makes sense for your business. The point is grouping modules that change together and share concepts. When you're working on pricing, you're probably touching <code>revenue/rates/</code> and <code>revenue/reports/</code>, not <code>integrations/slack/</code>.</p>
-
-<p>This two-level hierarchy - domain, then module - keeps navigation manageable even as the codebase grows. You know where to look without searching.</p>
-
-<h2 id="module-structure">Module Structure: The Minimum Viable Pattern</h2>
-
-<p>Every module needs at least three files:</p>
-
-<div class="dir-tree">
-<span class="folder">convex/core/rentals/</span>
-├── <span class="file">api.ts</span>          <span class="comment"># Public interface (thin wrappers)</span>
-├── <span class="file">functions.ts</span>    <span class="comment"># All implementations</span>
-└── <span class="file">schema.ts</span>       <span class="comment"># Tables, indexes, validators</span>
-</div>
-
-<p><code>schema.ts</code> owns the data - tables, indexes, and shared validators. <code>api.ts</code> is the public interface - thin wrappers that handle auth and delegate to the implementations. <code>functions.ts</code> contains all the actual query, mutation, and action logic.</p>
-
-<p><strong>The key insight: <code>api.ts</code> is always thin.</strong> It re-exports queries directly and wraps mutations/actions to add auth context before delegating. The real work happens in <code>functions.ts</code>. Having all public functions in one file also makes it easy to audit - you can verify every exposed endpoint has appropriate auth in a single glance.</p>
-
-<p>When <code>functions.ts</code> exceeds ~500 lines, split it into a folder. How you split is up to you - organise by whatever makes the code easiest to navigate.</p>
-
-<h3 id="by-function-type">By function type (public vs internal):</h3>
-
-<div class="dir-tree">
-<span class="folder">convex/core/rentals/</span>
-├── <span class="file">api.ts</span>
-├── <span class="folder">functions/</span>
-│   ├── <span class="file">internalMutations.ts</span>
-│   └── <span class="file">publicQueries.ts</span>
-└── <span class="file">schema.ts</span>
-</div>
-
-<h3 id="by-feature">By feature or entity:</h3>
-
-<div class="dir-tree">
-<span class="folder">convex/integrations/slack/</span>
-├── <span class="file">api.ts</span>
-├── <span class="folder">functions/</span>
-│   ├── <span class="file">channels.ts</span>
-│   ├── <span class="file">sendMessage.ts</span>
-│   └── <span class="file">templates.ts</span>
-└── <span class="file">schema.ts</span>
-</div>
-
-<p>Both work. The first makes sense when public/internal is your main distinction. The second makes sense when features are more meaningful - all the channel logic in one place, all the messaging logic in another. Pick what helps you find things.</p>
-
-<h2 id="separating-pure-logic">Separating Pure Logic: The _logic/ Pattern</h2>
-
-<p>Once a module grows complex - especially if it involves calculations, rule evaluation, or data transformation - you'll want to separate pure business logic from Convex functions.</p>
-
-<div class="dir-tree">
-<span class="folder">convex/revenue/rates/</span>
-├── <span class="folder">functions/</span>
-│   ├── <span class="file">publicQueries.ts</span>
-│   └── <span class="file">internalMutations.ts</span>
-└── <span class="folder">_logic/</span>
-    ├── <span class="file">calculations.ts</span>       <span class="comment"># Pure functions</span>
-    ├── <span class="file">inheritance.ts</span>        <span class="comment"># Rule resolution</span>
-    └── <span class="folder">__tests__/</span>
-        └── <span class="file">calculations.test.ts</span>
-</div>
-
-<p>The <code>_logic/</code> directory has one iron rule: <strong>no Convex context</strong>. No <code>ctx.db</code>, no <code>MutationCtx</code>, no framework imports. Just pure TypeScript functions that take data in and return data out.</p>
-
-<p>Why does this matter? Because testing pure functions is trivial. No mocking, no test harnesses, no Convex runtime. You can achieve 80%+ coverage on your business logic with fast unit tests.</p>
-
-<p>The Convex functions in <code>functions/</code> become thin orchestrators - fetch data, call logic, persist results. The actual brains live in <code>_logic/</code>, where they're easy to understand and test.</p>
-
+                        <h1 id="structuring-complex-projects-in-convex">Structuring Complex Projects in Convex</h1><p>When your backend grows past a few files, Convex&#39;s file-based routing becomes a double-edged sword.</p>
+<h2 id="the-problem-nobody-warns-you-about">The Problem Nobody Warns You About</h2><p>Convex&#39;s magic is that you write functions, and they become APIs. No routes to configure, no deployment to manage. But as your project grows from 10 functions to 100, that magic starts to feel less like convenience and more like chaos.</p>
+<p>And it&#39;s not just functions. Your schema starts as a single file defining a few tables. Then you add indexes. Then validators for shared field types. Then more tables. Before long, <code>schema.ts</code> is 4,000 lines and neither you nor your agent can find anything. The same thing happens with webhooks, workflows, and scheduled jobs — each one simple in isolation, collectively a mess.</p>
+<p>I hit this wall building a property management system. What started as a clean <code>reservations.ts</code> and <code>rentals.ts</code> evolved into a sprawling <code>convex/</code> directory where related code was scattered across dozens of files. The file-based routing that felt so natural at 500 lines became a liability at 5,000.</p>
+<p>The problem isn&#39;t Convex — it&#39;s that Convex&#39;s flexibility means you have to make structural decisions it won&#39;t make for you. And if you get those decisions wrong early, you&#39;re looking at a painful refactor later.</p>
+<h2 id="the-core-insight-modular-like-a-microservice">The Core Insight: Modular Like a Microservice</h2><p>The fix is to structure your Convex backend like you&#39;d structure microservices — but without actually splitting it into separate services.</p>
+<p>Each module owns a domain concept: rentals, reservations, reports, whatever. It owns the schema for that concept. It exposes functions as its API. Other modules call those functions; they don&#39;t reach into the database directly. From the outside, each module is a black box.</p>
+<p>This gives you the organisational benefits of microservices — clear ownership, independent reasoning, explicit boundaries — without the operational overhead. No network calls between services. No distributed transactions. No deployment coordination. You get the boundary discipline while Convex handles it all as one backend.</p>
+<h2 id="domains-grouping-related-modules">Domains: Grouping Related Modules</h2><p>Before diving into module structure, there&#39;s one level above: <strong>domains</strong>. Domains group related modules by business area.</p>
 <div class="code-block-wrapper">
-    <div class="code-block-header">
+      <div class="code-block-header">
+        <span class="code-lang">text</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-text">convex/
+├── core/           # Core business entities
+│   ├── rentals/
+│   └── reservations/
+├── integrations/   # External service connections
+│   ├── hostaway/
+│   └── slack/
+├── revenue/        # Financial operations
+│   ├── rates/
+│   └── reports/
+└── system/         # Infrastructure &amp; auth
+    ├── organizations/
+    └── users/</code></pre>
+    </div><p>The domain names aren&#39;t magic—use whatever makes sense for your business. The point is grouping modules that change together and share concepts. When you&#39;re working on pricing, you&#39;re probably touching <code>revenue/rates/</code> and <code>revenue/reports/</code>, not <code>integrations/slack/</code>.</p>
+<p>This two-level hierarchy—domain, then module—keeps navigation manageable even as the codebase grows. You know where to look without searching.</p>
+<h2 id="module-structure-the-minimum-viable-pattern">Module Structure: The Minimum Viable Pattern</h2><p>Every module needs at least three files:</p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-lang">text</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-text">convex/core/rentals/
+├── api.ts          # Public interface (thin wrappers)
+├── functions.ts    # All implementations
+└── schema.ts       # Tables, indexes, validators</code></pre>
+    </div><p><code>schema.ts</code> owns the data—tables, indexes, and shared validators. <code>api.ts</code> is the public interface—thin wrappers that handle auth and delegate to the implementations. <code>functions.ts</code> contains all the actual query, mutation, and action logic.</p>
+<p>The key insight: <code>api.ts</code> is always thin. It re-exports queries directly and wraps mutations/actions to add auth context before delegating. The real work happens in <code>functions.ts</code>. Having all public functions in one file also makes it easy to audit—you can verify every exposed endpoint has appropriate auth in a single glance.</p>
+<p>When <code>functions.ts</code> exceeds ~500 lines, split it into a folder. How you split is up to you—organise by whatever makes the code easiest to navigate.</p>
+<p><strong>By function type</strong> (public vs internal):</p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-lang">text</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-text">convex/core/rentals/
+├── api.ts
+├── functions/
+│   ├── internalMutations.ts
+│   └── publicQueries.ts
+└── schema.ts</code></pre>
+    </div><p><strong>By feature or entity</strong>:</p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-lang">text</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-text">convex/integrations/slack/
+├── api.ts
+├── functions/
+│   ├── channels.ts
+│   ├── sendMessage.ts
+│   └── templates.ts
+└── schema.ts</code></pre>
+    </div><p>Both work. The first makes sense when public/internal is your main distinction. The second makes sense when features are more meaningful — all the channel logic in one place, all the messaging logic in another. Pick what helps you find things.</p>
+<p><strong>What api.ts looks like:</strong></p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
         <span class="code-lang">typescript</span>
         <button class="copy-btn" onclick="copyCode(this)">
-            <i class="ph ph-copy"></i>
-            <span>Copy</span>
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
         </button>
-    </div>
-    <pre><code class="language-typescript">// _logic/calculations.ts
+      </div>
+      <pre><code class="language-typescript">// api.ts - thin wrappers
+export {
+  getFilterOptions,
+  getReportData,
+} from "./functions/publicQueries";
+
+export const refreshReports = orgMutation({
+  args: { rentalIds: v.array(v.id("rentals")) },
+  handler: async (ctx, args, orgContext) =&gt; {
+    return ctx.runMutation(
+      internal.revenue.reports.functions.triggerRefresh,
+      args
+    );
+  },
+});</code></pre>
+    </div><p>Queries re-export directly — they&#39;re read-only, so exposure is safe. Mutations and actions get thin wrappers that handle auth and delegate. The benefit: internal structure can change without breaking callers.</p>
+<h2 id="the-file-naming-convention-that-saves-your-sanity">The File Naming Convention That Saves Your Sanity</h2><p>Convex does something unexpected with file names — it strips the &quot;internal&quot; prefix when generating API paths. So <code>internalMutations.ts</code> becomes accessible at <code>internal.module.functions.mutations.*</code>, not <code>internal.module.functions.internalMutations.*</code>.</p>
+<p>This is confusing until you internalise it:</p>
+<table>
+<thead>
+<tr>
+<th>File Name</th>
+<th>API Path</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>internalQueries.ts</code></td>
+<td><code>internal.*.queries.*</code></td>
+</tr>
+<tr>
+<td><code>internalMutations.ts</code></td>
+<td><code>internal.*.mutations.*</code></td>
+</tr>
+<tr>
+<td><code>internalActions.ts</code></td>
+<td><code>internal.*.actions.*</code></td>
+</tr>
+</tbody></table>
+<p>When you&#39;re importing for file-level use, use the actual filename. When you&#39;re calling via <code>ctx.runMutation()</code>, use the transformed path. Mix these up and you&#39;ll get cryptic errors that waste hours.</p>
+<h2 id="separating-pure-logic-the-logic-pattern">Separating Pure Logic: The `_logic/` Pattern</h2><p>Once a module grows complex — especially if it involves calculations, rule evaluation, or data transformation — you&#39;ll want to separate pure business logic from Convex functions.</p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-lang">text</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-text">convex/revenue/rates/
+├── functions/
+│   ├── publicQueries.ts
+│   └── internalMutations.ts
+└── _logic/
+    ├── calculations.ts       # Pure functions
+    ├── inheritance.ts        # Rule resolution
+    └── __tests__/
+        └── calculations.test.ts</code></pre>
+    </div><p>The <code>_logic/</code> directory has one iron rule: <strong>no Convex context</strong>. No <code>ctx.db</code>, no <code>MutationCtx</code>, no framework imports. Just pure TypeScript functions that take data in and return data out.</p>
+<p>Why does this matter? Because testing pure functions is trivial. No mocking, no test harnesses, no Convex runtime. You can achieve 80%+ coverage on your business logic with fast unit tests.</p>
+<p>The Convex functions in <code>functions/</code> become thin orchestrators — fetch data, call logic, persist results. The actual brains live in <code>_logic/</code>, where they&#39;re easy to understand and test.</p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-lang">typescript</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-typescript">// _logic/calculations.ts
 export function calculateEffectiveRate(
   baseRate: number,
   adjustments: RateAdjustment[]
 ): number {
-  return adjustments.reduce((rate, adj) => applyAdjustment(rate, adj), baseRate);
+  return adjustments.reduce((rate, adj) =&gt; applyAdjustment(rate, adj), baseRate);
 }
 
 // functions/internalMutations.ts
 export const setRate = internalMutation({
   args: { rentalId: v.id("rentals"), baseRate: v.number(), adjustments: v.array(...) },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args) =&gt; {
     const effectiveRate = calculateEffectiveRate(args.baseRate, args.adjustments);
     await ctx.db.insert("rates", { ...args, effectiveRate });
   },
 });</code></pre>
-</div>
-
-<h2 id="node-runtime-split">The Node.js Runtime Split</h2>
-
-<p>Most Convex code runs in Convex's default JavaScript runtime. But some operations need Node.js - encryption, file system access, npm packages with native dependencies. Convex supports this with the <code>"use node"</code> directive.</p>
-
-<p>The catch: files with <code>"use node"</code> must be completely isolated. Non-Node files can't import from them - not even types. The bundler follows import chains, and if it finds a Node.js built-in in a non-Node bundle, it fails.</p>
-
+    </div><h2 id="the-node-js-runtime-split">The Node.js Runtime Split</h2><p>Most Convex code runs in Convex&#39;s default JavaScript runtime. But some operations need Node.js — encryption, file system access, npm packages with native dependencies. Convex supports this with the <code>&quot;use node&quot;</code> directive.</p>
+<p>The catch: files with <code>&quot;use node&quot;</code> must be completely isolated. Non-Node files can&#39;t import from them — not even types. The bundler follows import chains, and if it finds a Node.js built-in in a non-Node bundle, it fails.</p>
 <p>The cleanest solution is structural: put all Node.js code in a <code>node/</code> directory.</p>
-
-<div class="dir-tree">
-<span class="folder">convex/integrations/slack/</span>
-├── <span class="file">api.ts</span>              <span class="comment"># Public queries, mutations (non-Node)</span>
-├── <span class="file">functions.ts</span>        <span class="comment"># Internal functions (non-Node)</span>
-├── <span class="folder">node/</span>
-│   ├── <span class="file">actions.ts</span>      <span class="comment"># Public Node actions ("use node")</span>
-│   └── <span class="file">internal.ts</span>     <span class="comment"># Internal Node functions ("use node")</span>
-├── <span class="file">schema.ts</span>
-└── <span class="folder">_logic/</span>             <span class="comment"># Pure logic (shared by both runtimes)</span>
-</div>
-
-<p>Everything in <code>node/</code> has <code>"use node"</code> at the top. Everything outside <code>node/</code> doesn't. The separation is physical, not just convention - you can lint it. Pure logic in <code>_logic/</code> stays at the module root, shared by both runtimes.</p>
-
-<p><strong>API paths are explicit:</strong></p>
-
 <div class="code-block-wrapper">
-    <div class="code-block-header">
+      <div class="code-block-header">
+        <span class="code-lang">text</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-text">convex/integrations/slack/
+├── api.ts              # Public queries, mutations (non-Node)
+├── functions.ts        # Internal re-exports (non-Node only)
+├── node/
+│   ├── actions.ts      # Public Node actions ("use node")
+│   └── internal.ts     # Internal Node functions ("use node")
+├── schema.ts
+└── _logic/             # Pure logic (shared by both runtimes)</code></pre>
+    </div><p>Everything in <code>node/</code> has <code>&quot;use node&quot;</code> at the top. Everything outside <code>node/</code> doesn&#39;t. The separation is physical, not just convention — you can lint it. Pure logic in <code>_logic/</code> stays at the module root, shared by both runtimes.</p>
+<p><strong>API paths are explicit:</strong></p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
         <span class="code-lang">typescript</span>
         <button class="copy-btn" onclick="copyCode(this)">
-            <i class="ph ph-copy"></i>
-            <span>Copy</span>
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
         </button>
-    </div>
-    <pre><code class="language-typescript">// Non-Node (via api.ts)
+      </div>
+      <pre><code class="language-typescript">// Non-Node (via api.ts)
 api.integrations.slack.api.getChannels
 
 // Node (via node/)
 api.integrations.slack.node.actions.sendMessage</code></pre>
-</div>
-
-<p>The <code>node</code> segment tells you exactly what runtime you're invoking. No ambiguity.</p>
-
-<h2 id="multi-tenancy">Multi-Tenancy: Security by Structure</h2>
-
-<p>If you're building a SaaS, every query on tenant data needs to filter by <code>organizationId</code>. This sounds simple until you have 50 tables and 200 queries.</p>
-
-<p>The pattern I've settled on: <strong>org-scoped indexes as the only indexes</strong> on tenant tables.</p>
-
+    </div><p>The <code>node</code> segment tells you exactly what runtime you&#39;re invoking. No ambiguity.</p>
+<h2 id="multi-tenancy-security-by-structure">Multi-Tenancy: Security by Structure</h2><p>If you&#39;re building a SaaS, every query on tenant data needs to filter by <code>organizationId</code>. This sounds simple until you have 50 tables and 200 queries.</p>
+<p>The pattern I&#39;ve settled on: <strong>org-scoped indexes as the only indexes</strong> on tenant tables.</p>
 <div class="code-block-wrapper">
-    <div class="code-block-header">
+      <div class="code-block-header">
         <span class="code-lang">typescript</span>
         <button class="copy-btn" onclick="copyCode(this)">
-            <i class="ph ph-copy"></i>
-            <span>Copy</span>
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
         </button>
-    </div>
-    <pre><code class="language-typescript">// Correct - single org-scoped index
+      </div>
+      <pre><code class="language-typescript">// Correct - single org-scoped index
 forecastModelRows: defineTable({ ... })
   .index("by_org_model_month", ["organizationId", "modelId", "month"])
 
@@ -679,60 +1081,51 @@ forecastModelRows: defineTable({ ... })
 forecastModelRows: defineTable({ ... })
   .index("by_org_model_month", ["organizationId", "modelId", "month"])
   .index("by_model_month", ["modelId", "month"])  // Why does this exist?</code></pre>
-</div>
-
-<p>If you can't query tenant data without an <code>organizationId</code>, you can't accidentally leak data between tenants. The structure makes the bug impossible.</p>
-
+    </div><p>If you can&#39;t query tenant data without an <code>organizationId</code>, you can&#39;t accidentally leak data between tenants. The structure makes the bug impossible.</p>
 <p>This extends to function wrappers. Instead of manually checking auth in every function, use wrappers that inject org context:</p>
-
 <div class="code-block-wrapper">
-    <div class="code-block-header">
+      <div class="code-block-header">
         <span class="code-lang">typescript</span>
         <button class="copy-btn" onclick="copyCode(this)">
-            <i class="ph ph-copy"></i>
-            <span>Copy</span>
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
         </button>
-    </div>
-    <pre><code class="language-typescript">export const listRates = orgQuery({
+      </div>
+      <pre><code class="language-typescript">export const listRates = orgQuery({
   args: {},
-  handler: async (ctx, args, orgContext) => {
+  handler: async (ctx, args, orgContext) =&gt; {
     const { organizationId } = orgContext;
     return ctx.db
       .query("rates")
-      .withIndex("by_org", (q) => q.eq("organizationId", organizationId))
+      .withIndex("by_org", (q) =&gt; q.eq("organizationId", organizationId))
       .collect();
   },
 });</code></pre>
-</div>
-
-<p>The wrapper handles authentication, retrieves the user's organization, and passes it as the third parameter. No way to forget the org filter because it's structurally required. You can even add linting rules to enforce that all functions in <code>api.ts</code> use org wrappers - turning a security requirement into a build-time check.</p>
-
-<h2 id="depth-limits">Depth Limits: When Structure Becomes Overhead</h2>
-
-<p>There's a point where organisation becomes over-organisation. We cap module depth at three levels:</p>
-
-<div class="dir-tree">
-<span class="folder">convex/</span>               <span class="comment"># Level 0 (root)</span>
-├── <span class="folder">integrations/</span>     <span class="comment"># Level 1 (domain)</span>
-│   └── <span class="folder">hostaway/</span>     <span class="comment"># Level 2 (module)</span>
-│       └── <span class="folder">webhooks/</span> <span class="comment"># Level 3 (submodule) - Maximum</span>
-</div>
-
-<p>Beyond three levels, searching becomes faster than navigating. If you find yourself creating Level 4 directories, it's time to flatten or extract. A file called <code>feeCorrectionMutations.ts</code> is easier to find than a directory called <code>feeCorrection/</code> containing <code>mutations.ts</code>.</p>
-
-<h2 id="validators-and-types">Validators in Schema, Types in types.ts</h2>
-
-<p>Convex validators (<code>v.string()</code>, <code>v.object()</code>, etc.) belong in <code>schema.ts</code> alongside table definitions. This keeps the shape of your data in one place.</p>
-
+    </div><p>The wrapper handles authentication, retrieves the user&#39;s organization, and passes it as the third parameter. No way to forget the org filter because it&#39;s structurally required. You can even add linting rules to enforce that all functions in <code>api.ts</code> use org wrappers — turning a security requirement into a build-time check.</p>
+<h2 id="depth-limits-when-structure-becomes-overhead">Depth Limits: When Structure Becomes Overhead</h2><p>There&#39;s a point where organisation becomes over-organisation. We cap module depth at three levels:</p>
 <div class="code-block-wrapper">
-    <div class="code-block-header">
+      <div class="code-block-header">
+        <span class="code-lang">text</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-text">convex/               # Level 0 (root)
+├── integrations/     # Level 1 (domain)
+│   └── hostaway/     # Level 2 (module)
+│       └── webhooks/ # Level 3 (submodule) - Maximum</code></pre>
+    </div><p>Beyond three levels, searching becomes faster than navigating. If you find yourself creating Level 4 directories, it&#39;s time to flatten or extract. A file called <code>feeCorrectionMutations.ts</code> is easier to find than a directory called <code>feeCorrection/</code> containing <code>mutations.ts</code>.</p>
+<h2 id="validators-in-schema-types-in-types-ts">Validators in Schema, Types in types.ts</h2><p>Convex validators (<code>v.string()</code>, <code>v.object()</code>, etc.) belong in <code>schema.ts</code> alongside table definitions. This keeps the shape of your data in one place.</p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
         <span class="code-lang">typescript</span>
         <button class="copy-btn" onclick="copyCode(this)">
-            <i class="ph ph-copy"></i>
-            <span>Copy</span>
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
         </button>
-    </div>
-    <pre><code class="language-typescript">// schema.ts
+      </div>
+      <pre><code class="language-typescript">// schema.ts
 export const levelValidator = v.union(
   v.literal("portfolio"),
   v.literal("group"),
@@ -745,84 +1138,37 @@ export const moduleTables = {
     // ...
   }),
 };</code></pre>
-</div>
-
-<p>TypeScript types are a different concern. If you need types for external API responses (integration modules) or for sharing between Node.js and Convex runtimes, put them in a separate <code>types.ts</code>.</p>
-
-<p>But don't create <code>types.ts</code> just to have types. Derive them from validators using <code>Infer&lt;&gt;</code>:</p>
-
+    </div><p>TypeScript types are a different concern. If you need types for external API responses (integration modules) or for sharing between Node.js and Convex runtimes, put them in a separate <code>types.ts</code>.</p>
+<p>But don&#39;t create <code>types.ts</code> just to have types. Derive them from validators using <code>Infer&lt;&gt;</code>:</p>
 <div class="code-block-wrapper">
-    <div class="code-block-header">
+      <div class="code-block-header">
         <span class="code-lang">typescript</span>
         <button class="copy-btn" onclick="copyCode(this)">
-            <i class="ph ph-copy"></i>
-            <span>Copy</span>
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
         </button>
-    </div>
-    <pre><code class="language-typescript">import { Infer } from "convex/values";
+      </div>
+      <pre><code class="language-typescript">import { Infer } from "convex/values";
 
 export type Level = Infer&lt;typeof levelValidator&gt;;
 // Result: type Level = "portfolio" | "group" | "rental"</code></pre>
-</div>
-
-<h2 id="summary">Summary: The Decisions That Scale</h2>
-
-<p>After building systems to 20+ modules and 50+ tables, here's what actually matters:</p>
-
-<div class="summary-list">
-    <div class="summary-item">
-        <div class="summary-num">1</div>
-        <div class="summary-content">
-            <strong>Think in modules, not files</strong>
-            <p>Every cohesive concept gets its own directory with schema, api, and functions.</p>
-        </div>
-    </div>
-    <div class="summary-item">
-        <div class="summary-num">2</div>
-        <div class="summary-content">
-            <strong>Separate public from internal</strong>
-            <p><code>api.ts</code> is thin wrappers only - easy to audit for auth. Business logic lives in internal functions.</p>
-        </div>
-    </div>
-    <div class="summary-item">
-        <div class="summary-num">3</div>
-        <div class="summary-content">
-            <strong>Extract pure logic</strong>
-            <p>Anything that doesn't need <code>ctx</code> belongs in <code>_logic/</code> where it can be unit tested.</p>
-        </div>
-    </div>
-    <div class="summary-item">
-        <div class="summary-num">4</div>
-        <div class="summary-content">
-            <strong>Isolate Node.js code</strong>
-            <p>Everything in <code>node/</code> has <code>"use node"</code>. Everything outside doesn't. Physical separation, not convention.</p>
-        </div>
-    </div>
-    <div class="summary-item">
-        <div class="summary-num">5</div>
-        <div class="summary-content">
-            <strong>Enforce multi-tenancy structurally</strong>
-            <p>Org-scoped indexes as the only indexes on tenant data. Org wrappers on all public functions.</p>
-        </div>
-    </div>
-    <div class="summary-item">
-        <div class="summary-num">6</div>
-        <div class="summary-content">
-            <strong>Cap depth at three levels</strong>
-            <p>Beyond that, you're creating work, not reducing it.</p>
-        </div>
-    </div>
-</div>
-
-<p>None of this is specific to Convex - it's standard backend architecture applied to a file-based routing system. The difference is that Convex won't force these patterns on you. You have to choose them.</p>
-
-<p><strong>And that choice, made early, is the difference between a codebase that scales and one that becomes a burden.</strong></p>
-
-<h2 id="enforcing-these-patterns">Enforcing These Patterns</h2>
-
-<p>I've built a Claude Code skill that validates all of these conventions automatically. Every time the agent creates or edits a file, the skill checks compliance. If something violates a pattern, the edit fails - and the agent receives immediate feedback explaining what went wrong, why it matters, and how to fix it. I've used this for <a href="declarative-refactoring.html">massive refactors</a> with 100% success rate and zero input required.</p>
-
-<p>If you'd like free access to the skill, <a href="https://www.linkedin.com/in/chrispoulterai/" target="_blank" rel="noopener noreferrer">reach out on LinkedIn</a>.</p>
+    </div><h2 id="summary-the-decisions-that-scale">Summary: The Decisions That Scale</h2><p>After building systems to 20+ modules and 50+ tables, here&#39;s what actually matters:</p>
+<ol>
+<li><p><strong>Think in modules, not files</strong>. Every cohesive concept gets its own directory with schema, api, and functions.</p>
+</li>
+<li><p><strong>Separate public from internal</strong>. <code>api.ts</code> is thin wrappers only — easy to audit for auth. Business logic lives in internal functions.</p>
+</li>
+<li><p><strong>Extract pure logic</strong>. Anything that doesn&#39;t need <code>ctx</code> belongs in <code>_logic/</code> where it can be unit tested.</p>
+</li>
+<li><p><strong>Isolate Node.js code</strong>. Everything in <code>node/</code> has <code>&quot;use node&quot;</code>. Everything outside doesn&#39;t. Physical separation, not convention.</p>
+</li>
+<li><p><strong>Enforce multi-tenancy structurally</strong>. Org-scoped indexes as the only indexes on tenant data. Org wrappers on all public functions.</p>
+</li>
+<li><p><strong>Cap depth at three levels</strong>. Beyond that, you&#39;re creating work, not reducing it.</p>
+</li>
+</ol>
+<p>None of this is specific to Convex — it&#39;s standard backend architecture applied to a file-based routing system. The difference is that Convex won&#39;t force these patterns on you. You have to choose them.</p>
+<p>And that choice, made early, is the difference between a codebase that scales and one that becomes a burden.</p>
 
                     </div>
                 </article>
@@ -830,25 +1176,25 @@ export type Level = Infer&lt;typeof levelValidator&gt;;
 
             <!-- Right Column: Image + TOC -->
             <aside class="hidden lg:block">
-
+                
                 <div class="mb-8 rounded-xl overflow-hidden border border-dark-border shadow-lg">
                     <img src="images/convex-structure-feature.svg" alt="Structuring Complex Projects in Convex" class="w-full h-48 object-cover object-bottom">
                 </div>
-
+                
                 <div class="toc">
                     <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">On this page</h4>
                     <nav class="space-y-1">
-                        <a href="#the-problem-nobody-warns-you-about" class="toc-link">The Problem Nobody Warns You About</a>
-                        <a href="#the-core-insight" class="toc-link">The Core Insight</a>
-                        <a href="#domains-grouping-related-modules" class="toc-link">Domains: Grouping Related Modules</a>
-                        <a href="#module-structure" class="toc-link">Module Structure</a>
-                        <a href="#separating-pure-logic" class="toc-link">Separating Pure Logic</a>
-                        <a href="#node-runtime-split" class="toc-link">The Node.js Runtime Split</a>
-                        <a href="#multi-tenancy" class="toc-link">Multi-Tenancy</a>
-                        <a href="#depth-limits" class="toc-link">Depth Limits</a>
-                        <a href="#validators-and-types" class="toc-link">Validators and Types</a>
-                        <a href="#summary" class="toc-link">Summary</a>
-                        <a href="#enforcing-these-patterns" class="toc-link">Enforcing These Patterns</a>
+                        <a href="#the-problem-nobody-warns-you-about" class="toc-link ">The Problem Nobody Warns You About</a>
+<a href="#the-core-insight-modular-like-a-microservice" class="toc-link ">The Core Insight: Modular Like a Microservice</a>
+<a href="#domains-grouping-related-modules" class="toc-link ">Domains: Grouping Related Modules</a>
+<a href="#module-structure-the-minimum-viable-pattern" class="toc-link ">Module Structure: The Minimum Viable Pattern</a>
+<a href="#the-file-naming-convention-that-saves-your-sanity" class="toc-link ">The File Naming Convention That Saves Your Sanity</a>
+<a href="#separating-pure-logic-the-logic-pattern" class="toc-link ">Separating Pure Logic: The `_logic/` Pattern</a>
+<a href="#the-node-js-runtime-split" class="toc-link ">The Node.js Runtime Split</a>
+<a href="#multi-tenancy-security-by-structure" class="toc-link ">Multi-Tenancy: Security by Structure</a>
+<a href="#depth-limits-when-structure-becomes-overhead" class="toc-link ">Depth Limits: When Structure Becomes Overhead</a>
+<a href="#validators-in-schema-types-in-types-ts" class="toc-link ">Validators in Schema, Types in types.ts</a>
+<a href="#summary-the-decisions-that-scale" class="toc-link ">Summary: The Decisions That Scale</a>
                     </nav>
                 </div>
             </aside>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Decisions Are All You Need | AgenticCoding.dev</title>
-    <meta name="description" content="How to give agents consistent behaviour across sessions">
+    <title>How I Built a Production-Grade Accounting System from the Beach | AgenticCoding.dev</title>
+    <meta name="description" content="The end-to-end workflow behind a 200,000-line, agent-built finance system - from domain research to real bank statements">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -837,98 +837,87 @@
                     </a>
 
                     <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-title mb-4 leading-tight animate-in">
-                        Decisions Are All You Need
+                        How I Built a Production-Grade Accounting System from the Beach
                     </h1>
 
-                    <p class="text-xl text-white mb-6 animate-in" style="animation-delay: 0.1s">How to give agents consistent behaviour across sessions</p>
+                    <p class="text-xl text-white mb-6 animate-in" style="animation-delay: 0.1s">The end-to-end workflow behind a 200,000-line, agent-built finance system - from domain research to real bank statements</p>
 
                     <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 font-mono animate-in" style="animation-delay: 0.2s">
-                        <span>17 Jan 2026</span>
+                        <span>18 Mar 2026</span>
                         <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                        <span>9 min read</span>
+                        <span>17 min read</span>
                         <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                        <span>1,719 words</span>
-                        <span class="w-1 h-1 rounded-full bg-gray-600"></span><div class="flex gap-2"><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">claude-code</span><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">architecture</span><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">decisions</span></div>
+                        <span>3,266 words</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-600"></span><div class="flex gap-2"><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">ai-coding</span><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">architecture</span><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">planning</span><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">claude-code</span><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">finance</span><span class="px-2 py-0.5 bg-dark-card border border-dark-border rounded text-xs">skills</span></div>
                     </div>
                 </header>
 
                 <!-- Article Content -->
                 <article class="max-w-3xl">
                     <div class="prose">
-                        <h2 id="the-memory-problem">The Memory Problem</h2><p>You&#39;ve seen this before. User management gets a service class. Orders get helper functions. Payments get a singleton. Same agent, same codebase, three incompatible patterns.</p>
-<div class="loop-terminal">
-  <div class="loop-terminal-header">
-    <span class="loop-terminal-dot" style="background:#ef4444"></span>
-    <span class="loop-terminal-dot" style="background:#eab308"></span>
-    <span class="loop-terminal-dot" style="background:#22c55e"></span>
-    <span class="loop-terminal-title">without decisions</span>
-  </div>
-  <div class="loop-terminal-body">
-    <div class="loop-terminal-line loop-terminal-dim">Task 1: Agent creates UserService class</div>
-    <div class="loop-terminal-line loop-terminal-dim">Task 2: Agent creates orderHelpers functions</div>
-    <div class="loop-terminal-line loop-terminal-dim">Task 3: Agent creates PaymentManager singleton</div>
-    <div class="loop-terminal-line loop-terminal-error"><i class="ph ph-x"></i> Three different patterns. No consistency.</div>
-    <div class="loop-terminal-line loop-terminal-muted">... hours of cleanup later ...</div>
-  </div>
-</div>
-
-<p>This is what statelessness looks like in practice. AI agents have no memory between sessions, limited context within them. Every response generated fresh. The result isn&#39;t just inconsistency: it&#39;s technical debt that compounds with every task you delegate.</p>
-<p>The obvious fix is rules files. CLAUDE.md, cursor rules, system prompts full of instructions. But rules without reasoning don&#39;t stick. &quot;Use service classes&quot; tells the agent what to do, not when or why. Edge cases get handled inconsistently. The agent follows the letter, misses the intent.</p>
-<p>Rules also lack enforcement. Nothing stops the agent from ignoring them when pattern-matching pulls elsewhere. Suggestions aren&#39;t constraints.</p>
-<div class="callout-box">
-  <div class="callout-title"><i class="ph ph-lightbulb"></i> The Real Fix</div>
-  <div class="callout-content">Document architectural decisions with clear reasoning. Enforce them with validators that run after every edit. The agent reads the decision, understands the why, and can't make choices that violate it. <strong>Reasoning + enforcement = consistency.</strong></div>
-</div>
-
-<h2 id="why-agents-need-decisions">Why Agents Need Decisions</h2><p>Without documented decisions, agents pattern-match from whatever code they can see. They infer conventions from examples. Sometimes correctly. Often not.</p>
-<p>The longer the session, the worse this gets. Structural choice in hour one based on one part of the codebase. By hour four, different code, incompatible choice. By hour six, inconsistent in ways that take hours to untangle.</p>
-<div class="loop-terminal">
-  <div class="loop-terminal-header">
-    <span class="loop-terminal-dot" style="background:#ef4444"></span>
-    <span class="loop-terminal-dot" style="background:#eab308"></span>
-    <span class="loop-terminal-dot" style="background:#22c55e"></span>
-    <span class="loop-terminal-title">decisions/INDEX.md</span>
-  </div>
-  <div class="loop-terminal-body">
-    <div class="loop-terminal-line loop-terminal-dim"># Decision Index</div>
-    <div class="loop-terminal-line"></div>
-    <div class="loop-terminal-line"><span class="loop-terminal-label">ADR-001</span> Pure logic separation</div>
-    <div class="loop-terminal-line"><span class="loop-terminal-label">ADR-002</span> API entry points via api.ts facade</div>
-    <div class="loop-terminal-line"><span class="loop-terminal-label">ADR-003</span> Max 3 levels submodule depth</div>
-    <div class="loop-terminal-line"><span class="loop-terminal-label">ADR-004</span> Validators export from schema.ts</div>
-    <div class="loop-terminal-line"><span class="loop-terminal-label">ADR-005</span> Workflow functions in workflows/</div>
-  </div>
-</div>
-
-<p>Documented decisions prevent this. The agent doesn&#39;t infer, it reads. When encountering an edge case, it reasons from documented principles rather than guessing from patterns.</p>
-<p>The result: consistency that compounds. Every decision aligns with every previous decision, because they all flow from the same documented reasoning.</p>
-<h2 id="decision-records">Decision Records</h2><p>A decision record documents one architectural choice: what was decided, why, and how to verify compliance.</p>
+                        <p>Few domains punish inconsistency like accounting does. Every transaction has to balance. Every business rule has to agree with every other business rule. Fifteen modules, hundreds of rules, and zero margin for error. It&#39;s about the worst candidate for AI-generated code you could pick.</p>
+<p>I shipped a full accounting system into production from a beach in Lanzarote.</p>
+<p>Over 200,000 lines of code. It processes real bank statements, matches them to bookings, allocates payments, posts balanced journal entries, and reconciles against bank deposits. It handles the edge cases that break spreadsheets and off-the-shelf tools - partial payouts, fee corrections, superseded charges, out-of-order events.</p>
+<p>Without strict workflows, agents would have produced an inconsistent mess by the end of day one. What made this possible was a workflow that front-loads all the hard thinking into artefacts the agents can consume: domain decisions, implementation plans, machine-readable manifests, automated validators, and pre-written test suites.</p>
+<p>This article documents that workflow.</p>
+<h2 id="the-problem">The Problem</h2><p>Short-term rental finance is genuinely complex. As a property manager, you&#39;re holding money on behalf of other people. That immediately means you need a dual-ledger system - client money and company money, legally separated, with restricted cross-book movements. A booking arrives three months early. A payout lands covering reservations across multiple months. An OTA takes fees you need to track explicitly on the ledger. A guest cancels after partial payment.</p>
+<p>Every one of these scenarios has accounting implications. Get any of them wrong and your ledger doesn&#39;t balance.</p>
+<p>I looked at existing solutions. Xero can&#39;t do it - no business dimensions, no API-driven reconciliation, no concept of client money segregation beyond what you hack together with tracking categories. The only way to make this work was to build the ledger from scratch.</p>
+<p>That&#39;s not a weekend project. That&#39;s 21 architectural decisions, 16 module plans, 1,396 individual acceptance criteria, and months of implementation. The kind of project where things get quietly dropped. A field missing from a table. A business rule that nobody tests. An edge case in fee calculation that only surfaces when real statements hit the system.</p>
+<p>This is exactly the kind of project where AI coding assistants fall apart. Not because they can&#39;t write code - they can. Because they can&#39;t maintain consistency across something this large. By hour four of a session, they&#39;re contradicting decisions they made in hour one. By the third session, the codebase is inconsistent in ways that take longer to fix than building it properly would have taken.</p>
+<p>The fix isn&#39;t better prompting. It&#39;s better planning.</p>
+<h2 id="phase-1-domain-research">Phase 1: Domain Research</h2><p>I started with a brain dump. Everything I knew about short-term rental finance - the booking lifecycle, the payout timing, the fee structures, the legal requirements around client money. No code. No technical decisions. Just the domain.</p>
+<p>Then I gave the same detailed prompt to three different Deep Research agents: Claude, ChatGPT, and Gemini. The prompt described the business - a bookkeeping firm managing client money for short-term rental hosts - and asked each model to design the accounting system from first principles.</p>
+<p>The responses were revealing. Not because any one was right, but because of where they converged and where they diverged.</p>
+<p>All three agreed on the fundamentals: double-entry ledger with append-only enforcement. Client money segregated from company money. An allocation layer for the many-to-many relationship between payments and bookings. Reconciliation to external evidence as a first-class concept.</p>
+<p>Where they diverged was more interesting. GPT produced 1,700 lines of encyclopaedic detail - complete chart of accounts, night audit reconciliation patterns, three-way control formulas, and database schemas. Gemini brought hospitality-specific vocabulary: folios, city ledgers, provider clearing accounts, settlement profiles. Opus was more conceptual - it identified the two fundamental pools of money and the allocation layer between them, but left implementation open.</p>
+<p>The divergences were the decisions I needed to make. Should client and company money live in separate ledger tables or share a single engine with multiple books? Should hosts get their own sub-ledgers (Gemini&#39;s folio model) or be a dimension on shared books? Should revenue recognition run on a daily night-audit cadence or be event-driven?</p>
+<p>I fed all three outputs into a synthesis - a document that mapped convergences to accepted principles and divergences to an explicit decision backlog. 2,600 lines of research distilled into a list of the actual choices that mattered.</p>
+<p>From there, each decision got its own record. Context, options considered, the decision itself, consequences, and - critically - which requirements it satisfies.</p>
 <div class="code-block-wrapper">
       <div class="code-block-header">
-        <span class="code-lang">markdown</span>
+        <span class="code-lang">text</span>
         <button class="copy-btn" onclick="copyCode(this)">
           <i class="ph ph-copy"></i>
           <span>Copy</span>
         </button>
       </div>
-      <pre><code class="language-markdown"># Decision: Pure Logic Separation
-
-**Context:** Complex modules mix database access with calculations,
-making unit testing difficult.
-
-**Decision:** Separate pure functions into `_logic/` directories.
-These files must have no database access and no framework imports.
-
-**Reasoning:** Pure functions are trivially testable. No mocking
-required. Fast test execution. Clear separation of concerns.
-
-**Compliance:** Files in `_logic/` must not import MutationCtx,
-QueryCtx, or @/_generated/server. No ctx.db.* calls.</code></pre>
-    </div><p><strong>The reasoning section is what matters.</strong> Rules tell the AI what to do. Reasoning tells it why, so it can handle cases the rule doesn&#39;t cover.</p>
-<p>When the AI understands that <code>_logic/</code> exists for testability, it knows a function doing date arithmetic belongs there. But a function that fetches data then does arithmetic? Needs to be split. The fetch stays in <code>functions/</code>, the calculation moves to <code>_logic/</code>.</p>
-<p>Without reasoning, the AI pattern-matches. It sees &quot;calculation&quot; and puts everything in <code>_logic/</code>, database calls included.</p>
-<h2 id="enforcement-validators-as-constraints">Enforcement: Validators as Constraints</h2><p>Decision records without enforcement are suggestions. The AI might follow them. It might not.</p>
-<p>Validators turn decisions into constraints. Every time the AI edits a file, a validator checks whether the decision was followed. If not, the error message includes the decision details. The AI sees what it did wrong and how to fix it in a single response.</p>
+      <pre><code class="language-text">docs/features/finance/decisions/
+├── 0001-ledger-segregation.md
+├── 0002-host-segmentation.md
+├── 0003-booking-subledger-allocation.md
+├── ...
+└── 0019-vendor-bills-ap.md</code></pre>
+    </div><p>19 decision records, all accepted within two days. Host as dimension, not book-per-host. Single ledger engine with multiple books, not separate tables. Allocation at gross, not net. OTA fees captured explicitly at cash entry. Immutable journal entries with versioning, corrections via reversals only.</p>
+<p>Alongside the decisions, I built three supporting artefacts. A posting matrix mapping 30+ event types to specific debit/credit journal rules - the algorithmic heart of the system. A 250-term glossary so the AI would speak the same domain language consistently. And 300 numbered system requirements (REQ-*) - not user stories, but accounting invariants with traceability to the decisions that govern them.</p>
+<p>10,900 lines of planning documentation before a single line of code. The posting model alone went through four revisions before it was internally consistent.</p>
+<h2 id="phase-2-plans">Phase 2: Plans</h2><p>Decisions tell you what. Plans tell you how.</p>
+<p>Each module got a plan document that translated the relevant decisions into an implementation specification. Not pseudocode - actual schema definitions, function signatures with input/output shapes, business rules stated as testable invariants, and the events each module produces and consumes.</p>
+<div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-lang">text</span>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <i class="ph ph-copy"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+      <pre><code class="language-text">.claude/skills/finance-mvp/plans/
+├── _overview.md          # Module index + dependency graph
+├── _patterns.md          # Shared implementation patterns
+├── _testing.md           # Test infrastructure + mock patterns
+├── 00-core.md            # Hosts, properties, financial accounts
+├── 01-ledger.md          # Double-entry journal entries
+├── 02-subledger.md       # Booking charges + revenue recognition
+├── 03-payments.md        # Payment recording + allocation
+├── ...
+└── 14-statements-payouts.md</code></pre>
+    </div><p>30 documents. The ledger plan alone specifies five tables, their fields, their indexes, their field types, 12 functions with full argument and return shapes, and 15 business rules.</p>
+<p>This is where the real work happened. Expanding the plans took a couple of days. Refining them took three weeks.</p>
+<p>Pass after pass of finding inconsistencies. The availability module references a reconciliation status that the reconciliation module defines differently. The fee calculation assumes net-based allocation, but the payment module posts at gross. The subledger expects a booking charge to be immutable, but the statement import needs to supersede charges when corrections arrive.</p>
+<p>Each inconsistency meant going back to the decisions, sometimes revising them, then propagating the change through every plan that referenced them. This is tedious. It&#39;s also the most valuable work I did on the entire project. Every inconsistency caught in a plan is a bug that never gets written.</p>
+<p>I wrote about this problem in a previous article - how AI agents drift during long sessions because they can&#39;t maintain consistency. The fix I described was decision records with validators. But decisions and validators handle <em>structural</em> consistency. For <em>domain</em> consistency across 15 modules, you need plans that have been beaten into shape until they stop contradicting each other.</p>
+<h2 id="phase-3-manifests">Phase 3: Manifests</h2><p>Plans tell the agent what to build. That doesn&#39;t mean it builds it. I wanted to give the agent a tight enough feedback loop that it could self-correct — a scoreboard that says &quot;you missed these three things&quot; rather than me reading through every file to check.</p>
+<p>Each plan became a manifest - a JSON file listing every table, field, index, function, test case, and business rule that must exist for that module to be complete.</p>
 <div class="code-block-wrapper">
       <div class="code-block-header">
         <span class="code-lang">json</span>
@@ -938,202 +927,242 @@ QueryCtx, or @/_generated/server. No ctx.db.* calls.</code></pre>
         </button>
       </div>
       <pre><code class="language-json">{
-  "hooks": {
-    "PostToolUse": [{
-      "matcher": "Edit|Write",
-      "hooks": [{
-        "type": "command",
-        "command": "pnpm lint --quick --file \"$file_path\""
-      }]
-    }]
-  }
+  "module": "01-ledger",
+  "path": "convex/finance/ledger",
+  "phase": 1,
+  "dependencies": ["00-core"],
+  "schema": {
+    "tables": {
+      "journalEntries": {
+        "fields": ["organizationId", "ledgerBookId", "entryNumber",
+                   "entryDate", "description", "status", "version",
+                   "postingGroupId", "sourceEventType", "sourceEventId"],
+        "indexes": ["by_org", "by_org_and_ledgerBook",
+                    "by_org_and_postingGroup", "by_org_and_sourceEvent"],
+        "fieldTypes": {
+          "status": "vJournalEntryStatus",
+          "version": "v.number()"
+        }
+      }
+    }
+  },
+  "functions": [
+    { "name": "postJournalEntry", "type": "mutation" },
+    { "name": "getAccountBalance", "type": "query" }
+  ],
+  "tests": [
+    {
+      "file": "journalEntries.test.ts",
+      "cases": ["should reject unbalanced entry",
+                "should enforce period close"]
+    }
+  ],
+  "businessRules": [
+    "Journal entries must balance (total debits == total credits)",
+    "Cannot post to closed period"
+  ]
 }</code></pre>
-    </div><p>This runs after every file edit. Each error type has a templated message: the decision, reasoning, and fix are pre-written for that violation category:</p>
+    </div><p>16 manifests. 1,396 individual checks across seven categories - schema, function, structure, contract, validator, test, and rule - weighted by how hard they are to fix if wrong. Schema and function checks carry 3x weight. Test and documentation checks carry 1x.</p>
+<p>A 1,230-line validator script reads these manifests and scans the actual codebase. For each item, it produces a boolean: present or not. The output is a scoreboard.</p>
 <div class="loop-terminal">
   <div class="loop-terminal-header">
     <span class="loop-terminal-dot" style="background:#ef4444"></span>
     <span class="loop-terminal-dot" style="background:#eab308"></span>
     <span class="loop-terminal-dot" style="background:#22c55e"></span>
-    <span class="loop-terminal-title">module-lint</span>
+    <span class="loop-terminal-title">finance-validator</span>
   </div>
   <div class="loop-terminal-body">
-    <div class="loop-terminal-line loop-terminal-error"><i class="ph ph-x"></i> ERROR: _logic/calculations.ts violates pure logic separation</div>
-    <div class="loop-terminal-line"></div>
-    <div class="loop-terminal-line"><span class="loop-terminal-label">Decision:</span> Files in _logic/ must have no framework dependencies.</div>
-    <div class="loop-terminal-line"><span class="loop-terminal-label">Reasoning:</span> Pure functions are testable without mocking.</div>
-    <div class="loop-terminal-line"><span class="loop-terminal-label">Violation:</span> Found import of MutationCtx on line 3.</div>
-    <div class="loop-terminal-line"><span class="loop-terminal-label">Fix:</span> Move database operations to functions/internal.ts</div>
+    <div class="loop-terminal-line"><span class="loop-terminal-prompt">$</span> pnpm finance:validate</div>
+    <div class="loop-terminal-line" style="margin-top:0.75rem"></div>
+    <div class="loop-terminal-line"><span style="color:#64748b;display:inline-block;width:14ch">Module</span><span style="color:#64748b;display:inline-block;width:6ch">Phase</span><span style="color:#64748b;display:inline-block;width:7ch">Deps</span><span style="color:#64748b;display:inline-block;width:10ch">Raw</span><span style="color:#64748b;display:inline-block;width:10ch">Weighted</span><span style="color:#64748b">Status</span></div>
+    <div class="loop-terminal-line" style="color:#334155">──────────────────────────────────────────────────────────────</div>
+    <div class="loop-terminal-line"><span style="color:#e2e8f0;display:inline-block;width:14ch">00-core</span><span style="color:#94a3b8;display:inline-block;width:6ch">1</span><span style="color:#2dd4bf;display:inline-block;width:7ch">OK</span><span style="color:#94a3b8;display:inline-block;width:10ch">252/252</span><span style="color:#2dd4bf;display:inline-block;width:10ch">100.0%</span><span style="color:#2dd4bf;font-weight:700">DONE</span></div>
+    <div class="loop-terminal-line"><span style="color:#e2e8f0;display:inline-block;width:14ch">01-ledger</span><span style="color:#94a3b8;display:inline-block;width:6ch">1</span><span style="color:#2dd4bf;display:inline-block;width:7ch">OK</span><span style="color:#94a3b8;display:inline-block;width:10ch">287/287</span><span style="color:#2dd4bf;display:inline-block;width:10ch">100.0%</span><span style="color:#2dd4bf;font-weight:700">DONE</span></div>
+    <div class="loop-terminal-line"><span style="color:#e2e8f0;display:inline-block;width:14ch">02-subledger</span><span style="color:#94a3b8;display:inline-block;width:6ch">2</span><span style="color:#2dd4bf;display:inline-block;width:7ch">OK</span><span style="color:#94a3b8;display:inline-block;width:10ch">223/223</span><span style="color:#2dd4bf;display:inline-block;width:10ch">100.0%</span><span style="color:#2dd4bf;font-weight:700">DONE</span></div>
+    <div class="loop-terminal-line"><span style="color:#e2e8f0;display:inline-block;width:14ch">03-payments</span><span style="color:#94a3b8;display:inline-block;width:6ch">3</span><span style="color:#2dd4bf;display:inline-block;width:7ch">OK</span><span style="color:#94a3b8;display:inline-block;width:10ch">253/253</span><span style="color:#2dd4bf;display:inline-block;width:10ch">100.0%</span><span style="color:#2dd4bf;font-weight:700">DONE</span></div>
+    <div class="loop-terminal-line" style="margin-top:0.75rem"><span class="loop-terminal-success"><i class="ph ph-check-circle"></i> 16 modules validated. 1,396 checks passed.</span></div>
   </div>
 </div>
 
-<p>The AI doesn&#39;t need to look anything up. The error message contains everything: what decision was violated, why it exists, and the standard fix. The validator matches error patterns to pre-written remediation templates.</p>
+<p>A module can&#39;t start until every dependency hits 100%. This isn&#39;t convention - the validator enforces it. If the ledger module is at 98%, the subledger module shows BLOCKED. No exceptions.</p>
+<h2 id="phase-4-the-build">Phase 4: The Build</h2><p>This is the part I wanted to be hands-off. The agent reads the plan, runs the validator, and sees a scoreboard of everything that&#39;s missing. 87 red items across schema, functions, tests, and business rules. It doesn&#39;t need me to tell it what to work on — it picks up whatever&#39;s failing and starts building.</p>
+<p>After each file edit, a hook runs the architecture validator automatically. If the edit breaks a coding standard — puts a public function in the wrong file, uses a filter instead of an index, forgets an org-scoping wrapper — it gets rejected with an explanation of the rule and how to fix it. The agent self-corrects and moves on.</p>
+<p>The loop is: run validator, see what&#39;s red, fix it, run validator again. When the scoreboard hits 100%, the module is structurally complete. Then the agent runs the tests — every test case from the manifest, written upfront with real assertions — and implements until they pass. Six gates before a module is done:</p>
 <div class="feedback-loop">
-  <div class="feedback-step">
-    <div class="feedback-num">1</div>
-    <div class="feedback-text">AI edits a file</div>
-  </div>
+  <div class="feedback-step feedback-step-success"><div class="feedback-num">1</div><div class="feedback-text">Validator 100%</div></div>
   <div class="feedback-arrow"><i class="ph ph-arrow-right"></i></div>
-  <div class="feedback-step">
-    <div class="feedback-num">2</div>
-    <div class="feedback-text">Validator runs</div>
-  </div>
+  <div class="feedback-step feedback-step-success"><div class="feedback-num">2</div><div class="feedback-text">Tests pass</div></div>
   <div class="feedback-arrow"><i class="ph ph-arrow-right"></i></div>
-  <div class="feedback-step feedback-step-highlight">
-    <div class="feedback-num">3</div>
-    <div class="feedback-text">Error includes decision + fix</div>
-  </div>
+  <div class="feedback-step feedback-step-success"><div class="feedback-num">3</div><div class="feedback-text">TypeScript compiles</div></div>
   <div class="feedback-arrow"><i class="ph ph-arrow-right"></i></div>
-  <div class="feedback-step">
-    <div class="feedback-num">4</div>
-    <div class="feedback-text">AI fixes it</div>
-  </div>
+  <div class="feedback-step feedback-step-success"><div class="feedback-num">4</div><div class="feedback-text">Architecture clean</div></div>
   <div class="feedback-arrow"><i class="ph ph-arrow-right"></i></div>
-  <div class="feedback-step feedback-step-success">
-    <div class="feedback-num"><i class="ph ph-check"></i></div>
-    <div class="feedback-text">Validator passes</div>
+  <div class="feedback-step feedback-step-success"><div class="feedback-num">5</div><div class="feedback-text">Convex builds</div></div>
+  <div class="feedback-arrow"><i class="ph ph-arrow-right"></i></div>
+  <div class="feedback-step feedback-step-success"><div class="feedback-num">6</div><div class="feedback-text">Frontend compiles</div></div>
+</div>
+
+<p>Three skills make this work as a closed loop.</p>
+<div class="component-grid">
+  <div class="component-card" style="border-color: #14b8a6;">
+    <div class="component-header" style="background: #14b8a6;">
+      <i class="ph ph-shield-checkered"></i>
+      <span>ARCHITECTURE SKILL</span>
+    </div>
+    <div class="component-body">
+      <code>16 ADR-based rules</code>
+      <p>Enforces coding standards via post-edit hooks. Violations include the decision reasoning — the agent sees <em>why</em> the rule exists, not just that it broke it.</p>
+    </div>
+  </div>
+  <div class="component-arrow"><i class="ph ph-arrow-right"></i></div>
+  <div class="component-card" style="border-color: #3b82f6;">
+    <div class="component-header" style="background: #3b82f6;">
+      <i class="ph ph-blueprint"></i>
+      <span>FINANCE-MVP SKILL</span>
+    </div>
+    <div class="component-body">
+      <code>Plans + Manifests + Build</code>
+      <p>Provides the plans, manifests, and build procedure. The agent's instruction manual and its scoreboard in one.</p>
+    </div>
+  </div>
+  <div class="component-arrow"><i class="ph ph-arrow-right"></i></div>
+  <div class="component-card" style="border-color: #a855f7;">
+    <div class="component-header" style="background: #a855f7;">
+      <i class="ph ph-wrench"></i>
+      <span>OPS SKILL</span>
+    </div>
+    <div class="component-body">
+      <code>Diagnostics + E2E Scenarios</code>
+      <p>Diagnostic queries and scenario testing. Upload real bank statements and trace the matching chain for each line.</p>
+    </div>
   </div>
 </div>
 
-<p><strong>Self-correction at scale.</strong> The AI never drifts because every mistake comes with its own explanation and remedy.</p>
-<p>For unattended refactoring using this pattern, see <a href="declarative-refactoring.html">Stop Planning, Start Looping</a>.</p>
-<h2 id="context-injection">Context Injection</h2><p>The AI can only reason about what it can see. Decision records work because you can inject them into context.</p>
-<p>Skill files do this automatically. When you invoke a skill, Claude Code loads the skill&#39;s files into context. Your decisions, templates, and examples become available for the AI to reference.</p>
-<div class="code-block-wrapper">
-      <div class="code-block-header">
-        <span class="code-lang">text</span>
-        <button class="copy-btn" onclick="copyCode(this)">
-          <i class="ph ph-copy"></i>
-          <span>Copy</span>
-        </button>
+<h2 id="what-actually-happened">What Actually Happened</h2><p>The first module - core entities like hosts, properties, and financial accounts - took about two days. Not because it was complex, but because it was the first time the full loop was running. The test infrastructure needed work. The validator needed edge-case fixes. The org-wrapper pattern needed a couple of iterations.</p>
+<p>By the third module, it was routine. Load the skill. Read the plan. Write the tests. Implement. Pass the gates. Move on.</p>
+<p>The later modules - reconciliation, statement imports, Stripe integration - were harder because the domain is harder. Bank reconciliation has a many-to-many matching model with four match states and confidence scoring. Statement imports need to handle corrections that supersede previous charges. Stripe events arrive out of order and need idempotent processing.</p>
+<p>But the <em>workflow</em> didn&#39;t change. The plan had already resolved the hard questions. The manifest defined what &quot;done&quot; looked like. The validator enforced the standards. The tests proved correctness.</p>
+<p>I&#39;d estimate the split as roughly 50% planning, 20% implementation, 30% debugging and hardening. The plans tell the agent what to build. The validator loops ensure it actually builds it.</p>
+<div style="margin: 2rem 0; background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; padding: 1.5rem;">
+  <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 1rem;">Effort Distribution</div>
+  <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+    <div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem; font-size: 0.8rem;">
+        <span style="color: #e2e8f0; font-weight: 600;"><i class="ph ph-brain" style="color: #14b8a6; margin-right: 0.375rem;"></i>Planning</span>
+        <span style="color: #14b8a6; font-weight: 700;">50%</span>
       </div>
-      <pre><code class="language-text">.claude/skills/convex-module/
-├── SKILL.md              # Entry point
-├── decisions/            # Decision records
-│   ├── INDEX.md          # Quick lookup
-│   ├── logic-separation.md
-│   └── schema-patterns.md
-├── templates/            # Code patterns
-└── validators/           # Enforcement scripts</code></pre>
-    </div><p>The AI doesn&#39;t memorise your conventions. It reads them when needed. The skill file says &quot;read these decisions before working on modules.&quot; The AI loads them, applies them, and the validators confirm compliance.</p>
-<p>You can also inject context explicitly: &quot;Read the decisions in <code>.claude/skills/convex-module/decisions/</code> before restructuring this module.&quot; The AI loads the files, understands the reasoning, and works accordingly.</p>
-<h2 id="plans-as-executable-specifications">Plans as Executable Specifications</h2><p>For larger work, decisions combine with plans. A plan is a structured document describing what to build, referencing decisions that apply.</p>
-<div class="code-block-wrapper">
-      <div class="code-block-header">
-        <span class="code-lang">markdown</span>
-        <button class="copy-btn" onclick="copyCode(this)">
-          <i class="ph ph-copy"></i>
-          <span>Copy</span>
-        </button>
+      <div style="height: 8px; background: #0f172a; border-radius: 4px; overflow: hidden;">
+        <div style="width: 50%; height: 100%; background: linear-gradient(90deg, #14b8a6, #0d9488); border-radius: 4px;"></div>
       </div>
-      <pre><code class="language-markdown"># Plan: Restructure Hostaway Integration
-
-## Decisions to Follow
-- Read: decisions/api-entry-points.md
-- Read: decisions/submodule-depth.md
-- Read: decisions/workflow-patterns.md
-
-## Steps
-1. Create api.ts facade for public entry points
-2. Move webhooks to webhooks/ submodule
-3. Move rate sync to rates/ submodule
-4. Ensure max 3 levels of nesting
-5. Add CLAUDE.md documentation
-
-## Validation
-- Run: pnpm health-check --module hostaway
-- All validators must pass before completion</code></pre>
-    </div><p>The AI reads the plan, loads the referenced decisions, executes step by step, and validates after each change. The plan is an executable specification. Not instructions for a human to interpret, but a program for the AI to run.</p>
-<h2 id="the-collaborative-loop">The Collaborative Loop</h2><p>Decision records aren&#39;t just documentation you write for the AI. The AI participates in creating them.</p>
-<div class="collab-loop">
-  <div class="collab-step">
-    <div class="collab-icon" style="background: #14b8a6;"><i class="ph ph-magnifying-glass"></i></div>
-    <div class="collab-content">
-      <div class="collab-title">Identify</div>
-      <div class="collab-desc">AI spots inconsistency: "Some modules export from <code>schema.ts</code>, others from <code>types.ts</code>"</div>
     </div>
-  </div>
-  <div class="collab-connector"><i class="ph ph-arrow-down"></i></div>
-  <div class="collab-step">
-    <div class="collab-icon" style="background: #3b82f6;"><i class="ph ph-chat-circle"></i></div>
-    <div class="collab-content">
-      <div class="collab-title">Collaborate</div>
-      <div class="collab-desc">AI drafts decision record. You discuss trade-offs, refine reasoning, agree on compliance criteria.</div>
+    <div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem; font-size: 0.8rem;">
+        <span style="color: #e2e8f0; font-weight: 600;"><i class="ph ph-bug" style="color: #f59e0b; margin-right: 0.375rem;"></i>Debugging & Hardening</span>
+        <span style="color: #f59e0b; font-weight: 700;">30%</span>
+      </div>
+      <div style="height: 8px; background: #0f172a; border-radius: 4px; overflow: hidden;">
+        <div style="width: 30%; height: 100%; background: linear-gradient(90deg, #f59e0b, #d97706); border-radius: 4px;"></div>
+      </div>
     </div>
-  </div>
-  <div class="collab-connector"><i class="ph ph-arrow-down"></i></div>
-  <div class="collab-step">
-    <div class="collab-icon" style="background: #a855f7;"><i class="ph ph-wrench"></i></div>
-    <div class="collab-content">
-      <div class="collab-title">Build</div>
-      <div class="collab-desc">AI writes validation rules enforcing the decision. These go into the linting scripts.</div>
-    </div>
-  </div>
-  <div class="collab-connector"><i class="ph ph-arrow-down"></i></div>
-  <div class="collab-step">
-    <div class="collab-icon" style="background: #f59e0b;"><i class="ph ph-code"></i></div>
-    <div class="collab-content">
-      <div class="collab-title">Apply</div>
-      <div class="collab-desc">AI updates codebase to match. The validators it just wrote confirm each file is correct.</div>
-    </div>
-  </div>
-  <div class="collab-connector collab-connector-loop"><i class="ph ph-arrow-bend-up-left"></i> <span>repeat</span></div>
-</div>
-
-<p>The AI becomes a participant in architecture, not just an executor. It spots patterns across more code than you read. It suggests decisions based on what it&#39;s seen work.</p>
-<h2 id="why-this-works">Why This Works</h2><p>AI agents are stateless. They can&#39;t remember. They can&#39;t learn from experience across sessions. Every limitation people complain about (inconsistency, drift, forgetting context) stems from this.</p>
-<p>Decisions + validators work around the limitation entirely:</p>
-<div class="transform-grid">
-  <div class="transform-card">
-    <div class="transform-old"><s>Can't remember</s></div>
-    <div class="transform-new">Reasoning is written down</div>
-  </div>
-  <div class="transform-card">
-    <div class="transform-old"><s>Can't learn</s></div>
-    <div class="transform-new">Conventions are documented</div>
-  </div>
-  <div class="transform-card">
-    <div class="transform-old"><s>Drifts over time</s></div>
-    <div class="transform-new">Validators catch deviations</div>
-  </div>
-</div>
-
-<p>You&#39;re not making the agent smarter. You&#39;re giving it external memory and external reasoning it can reference. The agent&#39;s capability stays the same, but its outputs become consistent because the inputs (decisions with clear reasoning) are consistent.</p>
-<p>This compounds over time. Each decision narrows the space of valid choices. The agent doesn&#39;t have to figure out the right approach from infinite possibilities. It reads the decisions and the right approach is specified. <strong>Better inputs, better outputs.</strong></p>
-<h2 id="getting-started">Getting Started</h2><div class="getting-started">
-  <div class="gs-item">
-    <div class="gs-num">1</div>
-    <div class="gs-content">
-      <strong>Start with what you repeat</strong>
-      <p>If you keep telling the AI "we do it this way because...", that's a decision record waiting to be written.</p>
-    </div>
-  </div>
-  <div class="gs-item">
-    <div class="gs-num">2</div>
-    <div class="gs-content">
-      <strong>Write compliance first</strong>
-      <p>If you can't describe how to verify the decision, it's too vague. Validators need clear criteria.</p>
-    </div>
-  </div>
-  <div class="gs-item">
-    <div class="gs-num">3</div>
-    <div class="gs-content">
-      <strong>Build validators incrementally</strong>
-      <p>Start with structure checks: does the file exist, is it in the right place. Add pattern checks as decisions accumulate.</p>
-    </div>
-  </div>
-  <div class="gs-item">
-    <div class="gs-num">4</div>
-    <div class="gs-content">
-      <strong>Link templates to decisions</strong>
-      <p>When a template shows a pattern, link to the decision explaining why.</p>
+    <div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem; font-size: 0.8rem;">
+        <span style="color: #e2e8f0; font-weight: 600;"><i class="ph ph-code" style="color: #3b82f6; margin-right: 0.375rem;"></i>Implementation</span>
+        <span style="color: #3b82f6; font-weight: 700;">20%</span>
+      </div>
+      <div style="height: 8px; background: #0f172a; border-radius: 4px; overflow: hidden;">
+        <div style="width: 20%; height: 100%; background: linear-gradient(90deg, #3b82f6, #2563eb); border-radius: 4px;"></div>
+      </div>
     </div>
   </div>
 </div>
 
-<p>The first few decisions take effort. After that, the agent suggests new ones. It hits an edge case, asks how to handle it, and you realise there&#39;s a missing decision. Write it together, add the validator, continue.</p>
-<p>Each decision makes the agent more capable. Not smarter, more informed. The reasoning accumulates. The constraints tighten. Until the agent can&#39;t easily make a wrong choice, because the decisions specify what right looks like.</p>
-<p><strong>This is how you get long-term coherent reasoning from a stateless system. You externalise the reasoning.</strong></p>
-<p><strong>Decisions are all you need.</strong></p>
+<h2 id="where-the-human-effort-actually-goes">Where the Human Effort Actually Goes</h2><p>Most of my time goes into planning. The rest is debugging and hardening — working through the edge cases that only surface when real data hits the system. What I don&#39;t do is write implementation code.</p>
+<p>A typical module starts with me reviewing the plan - checking that module boundaries make sense, that business rules are stated as testable invariants, that the posting model balances for every transaction type, that inter-module contracts are consistent.</p>
+<p>Then I throw the plan at different models. Four or five iterations, finding contradictions, tightening invariants. One model spots an edge case in fee timing. Another questions whether the allocation should be gross or net. A third finds a naming inconsistency between two modules that would cause a runtime error three modules downstream.</p>
+<p>By the time the plan survives that process, the implementation is almost a formality. The plan specifies what to build. The manifests encode the plan. The validators enforce the manifests. The tests verify the behaviour. The agents fill in the gap between specification and working code.</p>
+<p>This is what makes the approach scale. If I were reviewing 200,000 lines of agent-generated code, I&#39;d be looking for problems I couldn&#39;t see in context I couldn&#39;t hold. Instead, I review 30 plan documents where every decision is explicit and every inconsistency is a contradiction in prose - not a bug in production.</p>
+<h2 id="what-i-d-do-differently">What I'd Do Differently</h2><p>I was wildly optimistic about one-shotting it. I had the plans, the manifests, the validators - in theory, you should be able to point an AI at it and walk away. In practice, domain complexity surfaces during implementation in ways that plans can&#39;t fully anticipate. The reconciliation gap analysis alone - figuring out that allocations should post to Host Funds Held, not Deferred Revenue - required going back to the accounting fundamentals and revising three module plans.</p>
+<p>The manifests also need to evolve. My first manifests were too coarse - they checked that a function existed but not that it used the right posting template. The current version checks field types, wrapper patterns, and contract shapes. Each iteration of the validator caught a new class of error.</p>
+<p>If I were starting over, I&#39;d spend more time on the manifests as executable specifications. The plans are useful for context - the AI needs to understand <em>why</em> a booking charge has a superseding pattern - but the manifests are what actually prevent drift.</p>
+<p>And I&#39;d build the ops skill earlier. Having diagnostic queries that can trace a statement line through the full matching chain - reservation, booking, charge, allocation - turned what would have been hours of debugging into 30-second checks.</p>
+<h2 id="the-stack">The Stack</h2><p>For anyone building something similar, here&#39;s what the tooling looks like:</p>
+<div class="getting-started">
+  <div class="gs-item">
+    <div class="gs-num" style="background: #14b8a6;">1</div>
+    <div class="gs-content">
+      <strong>Decisions <span style="color: #64748b; font-weight: 400;">(21 ADRs)</span></strong>
+      <p>Domain-level choices with explicit reasoning. These are the foundation everything else builds on.</p>
+    </div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-num" style="background: #3b82f6;">2</div>
+    <div class="gs-content">
+      <strong>Plans <span style="color: #64748b; font-weight: 400;">(30 documents)</span></strong>
+      <p>Module-level specifications with schemas, function signatures, business rules. Written for the AI to consume, refined until cross-module consistency holds.</p>
+    </div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-num" style="background: #a855f7;">3</div>
+    <div class="gs-content">
+      <strong>Manifests <span style="color: #64748b; font-weight: 400;">(16 JSON files, 1,396 checks)</span></strong>
+      <p>Machine-readable acceptance criteria extracted from plans. Every table, field, function, test case, and business rule.</p>
+    </div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-num" style="background: #f59e0b;">4</div>
+    <div class="gs-content">
+      <strong>Validator <span style="color: #64748b; font-weight: 400;">(1,230 lines)</span></strong>
+      <p>Reads manifests, scans codebase, produces pass/fail per item. Enforces dependency ordering. Gates the build.</p>
+    </div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-num" style="background: #ef4444;">5</div>
+    <div class="gs-content">
+      <strong>Architecture validators <span style="color: #64748b; font-weight: 400;">(16 ADR-based rules)</span></strong>
+      <p>Coding standards enforced via post-edit hooks. Every file edit in the backend is validated in under 2 seconds.</p>
+    </div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-num" style="background: #06b6d4;">6</div>
+    <div class="gs-content">
+      <strong>Test infrastructure <span style="color: #64748b; font-weight: 400;">(140 test files)</span></strong>
+      <p>Mock utilities, assertion helpers, org-context mocking. All written before implementation.</p>
+    </div>
+  </div>
+  <div class="gs-item">
+    <div class="gs-num" style="background: #8b5cf6;">7</div>
+    <div class="gs-content">
+      <strong>Ops tooling</strong>
+      <p>Diagnostic queries, E2E scenario runner, anonymised CSV fixtures for regression testing.</p>
+    </div>
+  </div>
+</div>
+
+<h2 id="what-this-actually-means">What This Actually Means</h2><p>I built a production-grade accounting system - dual-ledger, multi-tenant, with bank reconciliation and OTA statement imports - largely from a sun lounger. Not because I&#39;m unusually productive, and not because the agents are unusually clever. Because the workflow makes the hard part explicit and the mechanical part automated.</p>
+<p>The hard part is knowing what to build. Which accounts get debited. What happens when a payout covers three months of bookings. How to handle a correction that arrives after period close. That thinking doesn&#39;t go away - it moves earlier, into plans and decisions, where mistakes are cheap to find and free to fix.</p>
+<p>The mechanical part - writing the functions, wiring the schemas, implementing the test cases - is where agents excel. Not because they never make mistakes, but because a tight enough validation loop catches the mistakes before they compound.</p>
+<p>This isn&#39;t how most people use AI coding tools. Most people type a prompt and hope. The gap between that and what I&#39;ve described here is the same gap that&#39;s always existed in software: the gap between hacking something together and engineering it properly. The tools changed. The discipline didn&#39;t.</p>
+<div class="callout-box">
+  <div class="callout-title"><i class="ph ph-chart-bar"></i> By the Numbers</div>
+  <div class="callout-content" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center;">
+    <div>
+      <div style="font-size: 1.5rem; font-weight: 700; color: #14b8a6;">363</div>
+      <div style="font-size: 0.75rem; color: #94a3b8;">Source files</div>
+    </div>
+    <div>
+      <div style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;">1,396</div>
+      <div style="font-size: 0.75rem; color: #94a3b8;">Tests</div>
+    </div>
+    <div>
+      <div style="font-size: 1.5rem; font-weight: 700; color: #a855f7;">15</div>
+      <div style="font-size: 0.75rem; color: #94a3b8;">Modules</div>
+    </div>
+    <div>
+      <div style="font-size: 1.5rem; font-weight: 700; color: #f59e0b;">100%</div>
+      <div style="font-size: 0.75rem; color: #94a3b8;">Validated</div>
+    </div>
+  </div>
+</div>
 
                     </div>
                 </article>
@@ -1143,21 +1172,22 @@ QueryCtx, or @/_generated/server. No ctx.db.* calls.</code></pre>
             <aside class="hidden lg:block">
                 
                 <div class="mb-8 rounded-xl overflow-hidden border border-dark-border shadow-lg">
-                    <img src="images/decisions-feature.svg" alt="Decisions Are All You Need" class="w-full h-48 object-cover object-bottom">
+                    <img src="images/accounting-feature.svg" alt="How I Built a Production-Grade Accounting System from the Beach" class="w-full h-48 object-cover object-bottom">
                 </div>
                 
                 <div class="toc">
                     <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">On this page</h4>
                     <nav class="space-y-1">
-                        <a href="#the-memory-problem" class="toc-link ">The Memory Problem</a>
-<a href="#why-agents-need-decisions" class="toc-link ">Why Agents Need Decisions</a>
-<a href="#decision-records" class="toc-link ">Decision Records</a>
-<a href="#enforcement-validators-as-constraints" class="toc-link ">Enforcement: Validators as Constraints</a>
-<a href="#context-injection" class="toc-link ">Context Injection</a>
-<a href="#plans-as-executable-specifications" class="toc-link ">Plans as Executable Specifications</a>
-<a href="#the-collaborative-loop" class="toc-link ">The Collaborative Loop</a>
-<a href="#why-this-works" class="toc-link ">Why This Works</a>
-<a href="#getting-started" class="toc-link ">Getting Started</a>
+                        <a href="#the-problem" class="toc-link ">The Problem</a>
+<a href="#phase-1-domain-research" class="toc-link ">Phase 1: Domain Research</a>
+<a href="#phase-2-plans" class="toc-link ">Phase 2: Plans</a>
+<a href="#phase-3-manifests" class="toc-link ">Phase 3: Manifests</a>
+<a href="#phase-4-the-build" class="toc-link ">Phase 4: The Build</a>
+<a href="#what-actually-happened" class="toc-link ">What Actually Happened</a>
+<a href="#where-the-human-effort-actually-goes" class="toc-link ">Where the Human Effort Actually Goes</a>
+<a href="#what-i-d-do-differently" class="toc-link ">What I'd Do Differently</a>
+<a href="#the-stack" class="toc-link ">The Stack</a>
+<a href="#what-this-actually-means" class="toc-link ">What This Actually Means</a>
                     </nav>
                 </div>
             </aside>

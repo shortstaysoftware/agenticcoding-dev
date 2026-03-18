@@ -1,7 +1,7 @@
 ---
 title: Stop Planning, Start Looping
 subtitle: A Claude Code pattern for unattended refactoring
-date: 2025-01-16
+date: 2026-01-16
 tags: [claude-code, refactoring, skills]
 image: images/declarative-refactoring-result.jpeg
 ---

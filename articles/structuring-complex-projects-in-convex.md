@@ -1,3 +1,12 @@
+---
+title: Structuring Complex Projects in Convex
+subtitle: When your backend grows past a few files, Convex's file-based routing becomes a double-edged sword
+date: 2026-02-03
+author: Chris Poulter
+tags: [convex, architecture, patterns]
+image: images/convex-structure-feature.svg
+---
+
 # Structuring Complex Projects in Convex
 
 When your backend grows past a few files, Convex's file-based routing becomes a double-edged sword.

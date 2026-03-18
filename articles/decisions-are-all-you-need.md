@@ -1,7 +1,7 @@
 ---
 title: Decisions Are All You Need
 subtitle: How to give agents consistent behaviour across sessions
-date: 2025-01-17
+date: 2026-01-17
 tags: [claude-code, architecture, decisions]
 image: images/decisions-feature.svg
 ---

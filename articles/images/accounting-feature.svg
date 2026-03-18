@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
+  <rect width="800" height="400" fill="#0f172a"/>
+
+  <!-- Grid pattern -->
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <circle cx="1" cy="1" r="1" fill="#1e293b"/>
+  </pattern>
+  <rect width="800" height="400" fill="url(#grid)"/>
+
+  <!-- Ledger book left -->
+  <rect x="80" y="80" width="260" height="240" rx="12" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <rect x="80" y="80" width="260" height="44" rx="12" fill="#134e4a"/>
+  <rect x="80" y="112" width="260" height="12" fill="#134e4a"/>
+  <text x="210" y="108" text-anchor="middle" fill="#14b8a6" font-family="monospace" font-size="14" font-weight="bold">CLIENT MONEY</text>
+
+  <!-- Ledger lines left -->
+  <line x1="100" y1="150" x2="320" y2="150" stroke="#334155" stroke-width="1"/>
+  <text x="110" y="145" fill="#64748b" font-family="monospace" font-size="10">DR</text>
+  <text x="250" y="145" fill="#64748b" font-family="monospace" font-size="10">CR</text>
+  <text x="110" y="172" fill="#94a3b8" font-family="monospace" font-size="11">Guest Payment</text>
+  <text x="260" y="172" fill="#2dd4bf" font-family="monospace" font-size="11">£2,450</text>
+  <line x1="100" y1="182" x2="320" y2="182" stroke="#334155" stroke-width="1" stroke-dasharray="4"/>
+  <text x="110" y="202" fill="#94a3b8" font-family="monospace" font-size="11">OTA Commission</text>
+  <text x="200" y="202" fill="#f87171" font-family="monospace" font-size="11">£367</text>
+  <line x1="100" y1="212" x2="320" y2="212" stroke="#334155" stroke-width="1" stroke-dasharray="4"/>
+  <text x="110" y="232" fill="#94a3b8" font-family="monospace" font-size="11">Host Payout</text>
+  <text x="200" y="232" fill="#f87171" font-family="monospace" font-size="11">£2,083</text>
+  <line x1="100" y1="242" x2="320" y2="242" stroke="#334155" stroke-width="1" stroke-dasharray="4"/>
+
+  <!-- Balance -->
+  <line x1="100" y1="280" x2="320" y2="280" stroke="#14b8a6" stroke-width="2"/>
+  <text x="110" y="300" fill="#14b8a6" font-family="monospace" font-size="12" font-weight="bold">BALANCED</text>
+  <text x="260" y="300" fill="#14b8a6" font-family="monospace" font-size="12" font-weight="bold">£0.00</text>
+
+  <!-- Arrow connecting -->
+  <line x1="360" y1="200" x2="440" y2="200" stroke="#14b8a6" stroke-width="2" stroke-dasharray="6"/>
+  <polygon points="440,195 450,200 440,205" fill="#14b8a6"/>
+
+  <!-- Ledger book right -->
+  <rect x="460" y="80" width="260" height="240" rx="12" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <rect x="460" y="80" width="260" height="44" rx="12" fill="#1e3a5f"/>
+  <rect x="460" y="112" width="260" height="12" fill="#1e3a5f"/>
+  <text x="590" y="108" text-anchor="middle" fill="#3b82f6" font-family="monospace" font-size="14" font-weight="bold">COMPANY MONEY</text>
+
+  <!-- Ledger lines right -->
+  <line x1="480" y1="150" x2="700" y2="150" stroke="#334155" stroke-width="1"/>
+  <text x="490" y="145" fill="#64748b" font-family="monospace" font-size="10">DR</text>
+  <text x="630" y="145" fill="#64748b" font-family="monospace" font-size="10">CR</text>
+  <text x="490" y="172" fill="#94a3b8" font-family="monospace" font-size="11">Mgmt Fee</text>
+  <text x="640" y="172" fill="#2dd4bf" font-family="monospace" font-size="11">£245</text>
+  <line x1="480" y1="182" x2="700" y2="182" stroke="#334155" stroke-width="1" stroke-dasharray="4"/>
+  <text x="490" y="202" fill="#94a3b8" font-family="monospace" font-size="11">Revenue</text>
+  <text x="640" y="202" fill="#2dd4bf" font-family="monospace" font-size="11">£245</text>
+  <line x1="480" y1="212" x2="700" y2="212" stroke="#334155" stroke-width="1" stroke-dasharray="4"/>
+
+  <!-- Balance right -->
+  <line x1="480" y1="280" x2="700" y2="280" stroke="#3b82f6" stroke-width="2"/>
+  <text x="490" y="300" fill="#3b82f6" font-family="monospace" font-size="12" font-weight="bold">BALANCED</text>
+  <text x="640" y="300" fill="#3b82f6" font-family="monospace" font-size="12" font-weight="bold">£0.00</text>
+
+  <!-- Top label -->
+  <text x="400" y="50" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="18" font-weight="bold" letter-spacing="2">DUAL-LEDGER ARCHITECTURE</text>
+
+  <!-- Bottom stats -->
+  <text x="140" y="370" text-anchor="middle" fill="#475569" font-family="monospace" font-size="11">200K+ lines</text>
+  <text x="330" y="370" text-anchor="middle" fill="#475569" font-family="monospace" font-size="11">15 modules</text>
+  <text x="480" y="370" text-anchor="middle" fill="#475569" font-family="monospace" font-size="11">1,396 checks</text>
+  <text x="660" y="370" text-anchor="middle" fill="#475569" font-family="monospace" font-size="11">100% validated</text>
+</svg>
