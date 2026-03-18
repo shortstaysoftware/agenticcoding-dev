@@ -7,7 +7,7 @@ tags: [ai-coding, architecture, planning, claude-code, finance, skills]
 image: images/accounting-feature.svg
 ---
 
-Few domains punish inconsistency like accounting does. Every transaction has to balance. Every business rule has to agree with every other business rule. Fifteen modules, hundreds of rules, and zero margin for error. It's about the worst candidate for AI-generated code you could pick.
+Few domains are as unforgiving as accounting. A misposted transaction doesn't just produce a wrong number — it can trigger regulatory action, breach client money rules, or leave you personally liable. In property management, where you're holding other people's money, the stakes go further: get segregation wrong and you're looking at fines; get it systematically wrong and you're looking at insolvency. This is not a domain that tolerates "close enough." It's about the worst candidate for AI-generated code you could pick.
 
 I shipped a full accounting system into production from a beach in Lanzarote.
 
