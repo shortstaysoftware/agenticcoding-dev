@@ -1124,7 +1124,7 @@ async function generateArticles() {
     const renderer = createRenderer(toc);
     marked.use({ renderer });
 
-    const htmlContent = await marked(content);
+    const htmlContent = (await marked(content)).replace(/\u2014/g, "-");
     const html = template(meta, htmlContent, toc);
 
     const outputPath = join(OUTPUT_DIR, `${slug}.html`);

@@ -857,12 +857,12 @@
                     <div class="prose">
                         <h1 id="structuring-complex-projects-in-convex">Structuring Complex Projects in Convex</h1><p>When your backend grows past a few files, Convex&#39;s file-based routing becomes a double-edged sword.</p>
 <h2 id="the-problem-nobody-warns-you-about">The Problem Nobody Warns You About</h2><p>Convex&#39;s magic is that you write functions, and they become APIs. No routes to configure, no deployment to manage. But as your project grows from 10 functions to 100, that magic starts to feel less like convenience and more like chaos.</p>
-<p>And it&#39;s not just functions. Your schema starts as a single file defining a few tables. Then you add indexes. Then validators for shared field types. Then more tables. Before long, <code>schema.ts</code> is 4,000 lines and neither you nor your agent can find anything. The same thing happens with webhooks, workflows, and scheduled jobs — each one simple in isolation, collectively a mess.</p>
+<p>And it&#39;s not just functions. Your schema starts as a single file defining a few tables. Then you add indexes. Then validators for shared field types. Then more tables. Before long, <code>schema.ts</code> is 4,000 lines and neither you nor your agent can find anything. The same thing happens with webhooks, workflows, and scheduled jobs - each one simple in isolation, collectively a mess.</p>
 <p>I hit this wall building a property management system. What started as a clean <code>reservations.ts</code> and <code>rentals.ts</code> evolved into a sprawling <code>convex/</code> directory where related code was scattered across dozens of files. The file-based routing that felt so natural at 500 lines became a liability at 5,000.</p>
-<p>The problem isn&#39;t Convex — it&#39;s that Convex&#39;s flexibility means you have to make structural decisions it won&#39;t make for you. And if you get those decisions wrong early, you&#39;re looking at a painful refactor later.</p>
-<h2 id="the-core-insight-modular-like-a-microservice">The Core Insight: Modular Like a Microservice</h2><p>The fix is to structure your Convex backend like you&#39;d structure microservices — but without actually splitting it into separate services.</p>
+<p>The problem isn&#39;t Convex - it&#39;s that Convex&#39;s flexibility means you have to make structural decisions it won&#39;t make for you. And if you get those decisions wrong early, you&#39;re looking at a painful refactor later.</p>
+<h2 id="the-core-insight-modular-like-a-microservice">The Core Insight: Modular Like a Microservice</h2><p>The fix is to structure your Convex backend like you&#39;d structure microservices - but without actually splitting it into separate services.</p>
 <p>Each module owns a domain concept: rentals, reservations, reports, whatever. It owns the schema for that concept. It exposes functions as its API. Other modules call those functions; they don&#39;t reach into the database directly. From the outside, each module is a black box.</p>
-<p>This gives you the organisational benefits of microservices — clear ownership, independent reasoning, explicit boundaries — without the operational overhead. No network calls between services. No distributed transactions. No deployment coordination. You get the boundary discipline while Convex handles it all as one backend.</p>
+<p>This gives you the organisational benefits of microservices - clear ownership, independent reasoning, explicit boundaries - without the operational overhead. No network calls between services. No distributed transactions. No deployment coordination. You get the boundary discipline while Convex handles it all as one backend.</p>
 <h2 id="domains-grouping-related-modules">Domains: Grouping Related Modules</h2><p>Before diving into module structure, there&#39;s one level above: <strong>domains</strong>. Domains group related modules by business area.</p>
 <div class="code-block-wrapper">
       <div class="code-block-header">
@@ -885,8 +885,8 @@
 └── system/         # Infrastructure &amp; auth
     ├── organizations/
     └── users/</code></pre>
-    </div><p>The domain names aren&#39;t magic—use whatever makes sense for your business. The point is grouping modules that change together and share concepts. When you&#39;re working on pricing, you&#39;re probably touching <code>revenue/rates/</code> and <code>revenue/reports/</code>, not <code>integrations/slack/</code>.</p>
-<p>This two-level hierarchy—domain, then module—keeps navigation manageable even as the codebase grows. You know where to look without searching.</p>
+    </div><p>The domain names aren&#39;t magic-use whatever makes sense for your business. The point is grouping modules that change together and share concepts. When you&#39;re working on pricing, you&#39;re probably touching <code>revenue/rates/</code> and <code>revenue/reports/</code>, not <code>integrations/slack/</code>.</p>
+<p>This two-level hierarchy-domain, then module-keeps navigation manageable even as the codebase grows. You know where to look without searching.</p>
 <h2 id="module-structure-the-minimum-viable-pattern">Module Structure: The Minimum Viable Pattern</h2><p>Every module needs at least three files:</p>
 <div class="code-block-wrapper">
       <div class="code-block-header">
@@ -900,9 +900,9 @@
 ├── api.ts          # Public interface (thin wrappers)
 ├── functions.ts    # All implementations
 └── schema.ts       # Tables, indexes, validators</code></pre>
-    </div><p><code>schema.ts</code> owns the data—tables, indexes, and shared validators. <code>api.ts</code> is the public interface—thin wrappers that handle auth and delegate to the implementations. <code>functions.ts</code> contains all the actual query, mutation, and action logic.</p>
-<p>The key insight: <code>api.ts</code> is always thin. It re-exports queries directly and wraps mutations/actions to add auth context before delegating. The real work happens in <code>functions.ts</code>. Having all public functions in one file also makes it easy to audit—you can verify every exposed endpoint has appropriate auth in a single glance.</p>
-<p>When <code>functions.ts</code> exceeds ~500 lines, split it into a folder. How you split is up to you—organise by whatever makes the code easiest to navigate.</p>
+    </div><p><code>schema.ts</code> owns the data-tables, indexes, and shared validators. <code>api.ts</code> is the public interface-thin wrappers that handle auth and delegate to the implementations. <code>functions.ts</code> contains all the actual query, mutation, and action logic.</p>
+<p>The key insight: <code>api.ts</code> is always thin. It re-exports queries directly and wraps mutations/actions to add auth context before delegating. The real work happens in <code>functions.ts</code>. Having all public functions in one file also makes it easy to audit-you can verify every exposed endpoint has appropriate auth in a single glance.</p>
+<p>When <code>functions.ts</code> exceeds ~500 lines, split it into a folder. How you split is up to you-organise by whatever makes the code easiest to navigate.</p>
 <p><strong>By function type</strong> (public vs internal):</p>
 <div class="code-block-wrapper">
       <div class="code-block-header">
@@ -934,7 +934,7 @@
 │   ├── sendMessage.ts
 │   └── templates.ts
 └── schema.ts</code></pre>
-    </div><p>Both work. The first makes sense when public/internal is your main distinction. The second makes sense when features are more meaningful — all the channel logic in one place, all the messaging logic in another. Pick what helps you find things.</p>
+    </div><p>Both work. The first makes sense when public/internal is your main distinction. The second makes sense when features are more meaningful - all the channel logic in one place, all the messaging logic in another. Pick what helps you find things.</p>
 <p><strong>What api.ts looks like:</strong></p>
 <div class="code-block-wrapper">
       <div class="code-block-header">
@@ -959,8 +959,8 @@ export const refreshReports = orgMutation({
     );
   },
 });</code></pre>
-    </div><p>Queries re-export directly — they&#39;re read-only, so exposure is safe. Mutations and actions get thin wrappers that handle auth and delegate. The benefit: internal structure can change without breaking callers.</p>
-<h2 id="the-file-naming-convention-that-saves-your-sanity">The File Naming Convention That Saves Your Sanity</h2><p>Convex does something unexpected with file names — it strips the &quot;internal&quot; prefix when generating API paths. So <code>internalMutations.ts</code> becomes accessible at <code>internal.module.functions.mutations.*</code>, not <code>internal.module.functions.internalMutations.*</code>.</p>
+    </div><p>Queries re-export directly - they&#39;re read-only, so exposure is safe. Mutations and actions get thin wrappers that handle auth and delegate. The benefit: internal structure can change without breaking callers.</p>
+<h2 id="the-file-naming-convention-that-saves-your-sanity">The File Naming Convention That Saves Your Sanity</h2><p>Convex does something unexpected with file names - it strips the &quot;internal&quot; prefix when generating API paths. So <code>internalMutations.ts</code> becomes accessible at <code>internal.module.functions.mutations.*</code>, not <code>internal.module.functions.internalMutations.*</code>.</p>
 <p>This is confusing until you internalise it:</p>
 <table>
 <thead>
@@ -983,7 +983,7 @@ export const refreshReports = orgMutation({
 </tr>
 </tbody></table>
 <p>When you&#39;re importing for file-level use, use the actual filename. When you&#39;re calling via <code>ctx.runMutation()</code>, use the transformed path. Mix these up and you&#39;ll get cryptic errors that waste hours.</p>
-<h2 id="separating-pure-logic-the-logic-pattern">Separating Pure Logic: The `_logic/` Pattern</h2><p>Once a module grows complex — especially if it involves calculations, rule evaluation, or data transformation — you&#39;ll want to separate pure business logic from Convex functions.</p>
+<h2 id="separating-pure-logic-the-logic-pattern">Separating Pure Logic: The `_logic/` Pattern</h2><p>Once a module grows complex - especially if it involves calculations, rule evaluation, or data transformation - you&#39;ll want to separate pure business logic from Convex functions.</p>
 <div class="code-block-wrapper">
       <div class="code-block-header">
         <span class="code-lang">text</span>
@@ -1003,7 +1003,7 @@ export const refreshReports = orgMutation({
         └── calculations.test.ts</code></pre>
     </div><p>The <code>_logic/</code> directory has one iron rule: <strong>no Convex context</strong>. No <code>ctx.db</code>, no <code>MutationCtx</code>, no framework imports. Just pure TypeScript functions that take data in and return data out.</p>
 <p>Why does this matter? Because testing pure functions is trivial. No mocking, no test harnesses, no Convex runtime. You can achieve 80%+ coverage on your business logic with fast unit tests.</p>
-<p>The Convex functions in <code>functions/</code> become thin orchestrators — fetch data, call logic, persist results. The actual brains live in <code>_logic/</code>, where they&#39;re easy to understand and test.</p>
+<p>The Convex functions in <code>functions/</code> become thin orchestrators - fetch data, call logic, persist results. The actual brains live in <code>_logic/</code>, where they&#39;re easy to understand and test.</p>
 <div class="code-block-wrapper">
       <div class="code-block-header">
         <span class="code-lang">typescript</span>
@@ -1028,8 +1028,8 @@ export const setRate = internalMutation({
     await ctx.db.insert("rates", { ...args, effectiveRate });
   },
 });</code></pre>
-    </div><h2 id="the-node-js-runtime-split">The Node.js Runtime Split</h2><p>Most Convex code runs in Convex&#39;s default JavaScript runtime. But some operations need Node.js — encryption, file system access, npm packages with native dependencies. Convex supports this with the <code>&quot;use node&quot;</code> directive.</p>
-<p>The catch: files with <code>&quot;use node&quot;</code> must be completely isolated. Non-Node files can&#39;t import from them — not even types. The bundler follows import chains, and if it finds a Node.js built-in in a non-Node bundle, it fails.</p>
+    </div><h2 id="the-node-js-runtime-split">The Node.js Runtime Split</h2><p>Most Convex code runs in Convex&#39;s default JavaScript runtime. But some operations need Node.js - encryption, file system access, npm packages with native dependencies. Convex supports this with the <code>&quot;use node&quot;</code> directive.</p>
+<p>The catch: files with <code>&quot;use node&quot;</code> must be completely isolated. Non-Node files can&#39;t import from them - not even types. The bundler follows import chains, and if it finds a Node.js built-in in a non-Node bundle, it fails.</p>
 <p>The cleanest solution is structural: put all Node.js code in a <code>node/</code> directory.</p>
 <div class="code-block-wrapper">
       <div class="code-block-header">
@@ -1047,7 +1047,7 @@ export const setRate = internalMutation({
 │   └── internal.ts     # Internal Node functions ("use node")
 ├── schema.ts
 └── _logic/             # Pure logic (shared by both runtimes)</code></pre>
-    </div><p>Everything in <code>node/</code> has <code>&quot;use node&quot;</code> at the top. Everything outside <code>node/</code> doesn&#39;t. The separation is physical, not just convention — you can lint it. Pure logic in <code>_logic/</code> stays at the module root, shared by both runtimes.</p>
+    </div><p>Everything in <code>node/</code> has <code>&quot;use node&quot;</code> at the top. Everything outside <code>node/</code> doesn&#39;t. The separation is physical, not just convention - you can lint it. Pure logic in <code>_logic/</code> stays at the module root, shared by both runtimes.</p>
 <p><strong>API paths are explicit:</strong></p>
 <div class="code-block-wrapper">
       <div class="code-block-header">
@@ -1101,7 +1101,7 @@ forecastModelRows: defineTable({ ... })
       .collect();
   },
 });</code></pre>
-    </div><p>The wrapper handles authentication, retrieves the user&#39;s organization, and passes it as the third parameter. No way to forget the org filter because it&#39;s structurally required. You can even add linting rules to enforce that all functions in <code>api.ts</code> use org wrappers — turning a security requirement into a build-time check.</p>
+    </div><p>The wrapper handles authentication, retrieves the user&#39;s organization, and passes it as the third parameter. No way to forget the org filter because it&#39;s structurally required. You can even add linting rules to enforce that all functions in <code>api.ts</code> use org wrappers - turning a security requirement into a build-time check.</p>
 <h2 id="depth-limits-when-structure-becomes-overhead">Depth Limits: When Structure Becomes Overhead</h2><p>There&#39;s a point where organisation becomes over-organisation. We cap module depth at three levels:</p>
 <div class="code-block-wrapper">
       <div class="code-block-header">
@@ -1156,7 +1156,7 @@ export type Level = Infer&lt;typeof levelValidator&gt;;
 <ol>
 <li><p><strong>Think in modules, not files</strong>. Every cohesive concept gets its own directory with schema, api, and functions.</p>
 </li>
-<li><p><strong>Separate public from internal</strong>. <code>api.ts</code> is thin wrappers only — easy to audit for auth. Business logic lives in internal functions.</p>
+<li><p><strong>Separate public from internal</strong>. <code>api.ts</code> is thin wrappers only - easy to audit for auth. Business logic lives in internal functions.</p>
 </li>
 <li><p><strong>Extract pure logic</strong>. Anything that doesn&#39;t need <code>ctx</code> belongs in <code>_logic/</code> where it can be unit tested.</p>
 </li>
@@ -1167,7 +1167,7 @@ export type Level = Infer&lt;typeof levelValidator&gt;;
 <li><p><strong>Cap depth at three levels</strong>. Beyond that, you&#39;re creating work, not reducing it.</p>
 </li>
 </ol>
-<p>None of this is specific to Convex — it&#39;s standard backend architecture applied to a file-based routing system. The difference is that Convex won&#39;t force these patterns on you. You have to choose them.</p>
+<p>None of this is specific to Convex - it&#39;s standard backend architecture applied to a file-based routing system. The difference is that Convex won&#39;t force these patterns on you. You have to choose them.</p>
 <p>And that choice, made early, is the difference between a codebase that scales and one that becomes a burden.</p>
 
                     </div>

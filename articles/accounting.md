@@ -7,7 +7,7 @@ tags: [ai-coding, architecture, planning, claude-code, finance, skills]
 image: images/accounting-feature.svg
 ---
 
-Few domains are as unforgiving as accounting. A misposted transaction doesn't just produce a wrong number — it can trigger regulatory action, breach client money rules, or leave you personally liable. In property management, where you're holding other people's money, the stakes go further: get segregation wrong and you're looking at fines; get it systematically wrong and you're looking at insolvency. This is not a domain that tolerates "close enough." It's about the worst candidate for AI-generated code you could pick.
+Few domains are as unforgiving as accounting. A misposted transaction doesn't just produce a wrong number - it can trigger regulatory action, breach client money rules, or leave you personally liable. In property management, where you're holding other people's money, the stakes go further: get segregation wrong and you're looking at fines; get it systematically wrong and you're looking at insolvency. This is not a domain that tolerates "close enough." It's about the worst candidate for AI-generated code you could pick.
 
 I shipped a full accounting system into production from a beach in Lanzarote.
 
@@ -95,7 +95,7 @@ I wrote about this problem in a previous article - how AI agents drift during lo
 
 ## Phase 3: Manifests
 
-Plans tell the agent what to build. That doesn't mean it builds it. I wanted to give the agent a tight enough feedback loop that it could self-correct — a scoreboard that says "you missed these three things" rather than me reading through every file to check.
+Plans tell the agent what to build. That doesn't mean it builds it. I wanted to give the agent a tight enough feedback loop that it could self-correct - a scoreboard that says "you missed these three things" rather than me reading through every file to check.
 
 Each plan became a manifest - a JSON file listing every table, field, index, function, test case, and business rule that must exist for that module to be complete.
 
@@ -166,11 +166,11 @@ A module can't start until every dependency hits 100%. This isn't convention - t
 
 ## Phase 4: The Build
 
-This is the part I wanted to be hands-off. The agent reads the plan, runs the validator, and sees a scoreboard of everything that's missing. 87 red items across schema, functions, tests, and business rules. It doesn't need me to tell it what to work on — it picks up whatever's failing and starts building.
+This is the part I wanted to be hands-off. The agent reads the plan, runs the validator, and sees a scoreboard of everything that's missing. 87 red items across schema, functions, tests, and business rules. It doesn't need me to tell it what to work on - it picks up whatever's failing and starts building.
 
-After each file edit, a hook runs the architecture validator automatically. If the edit breaks a coding standard — puts a public function in the wrong file, uses a filter instead of an index, forgets an org-scoping wrapper — it gets rejected with an explanation of the rule and how to fix it. The agent self-corrects and moves on.
+After each file edit, a hook runs the architecture validator automatically. If the edit breaks a coding standard - puts a public function in the wrong file, uses a filter instead of an index, forgets an org-scoping wrapper - it gets rejected with an explanation of the rule and how to fix it. The agent self-corrects and moves on.
 
-The loop is: run validator, see what's red, fix it, run validator again. When the scoreboard hits 100%, the module is structurally complete. Then the agent runs the tests — every test case from the manifest, written upfront with real assertions — and implements until they pass. Six gates before a module is done:
+The loop is: run validator, see what's red, fix it, run validator again. When the scoreboard hits 100%, the module is structurally complete. Then the agent runs the tests - every test case from the manifest, written upfront with real assertions - and implements until they pass. Six gates before a module is done:
 
 <div class="feedback-loop">
   <div class="feedback-step feedback-step-success"><div class="feedback-num">1</div><div class="feedback-text">Validator 100%</div></div>
@@ -196,7 +196,7 @@ Three skills make this work as a closed loop.
     </div>
     <div class="component-body">
       <code>16 ADR-based rules</code>
-      <p>Enforces coding standards via post-edit hooks. Violations include the decision reasoning — the agent sees <em>why</em> the rule exists, not just that it broke it.</p>
+      <p>Enforces coding standards via post-edit hooks. Violations include the decision reasoning - the agent sees <em>why</em> the rule exists, not just that it broke it.</p>
     </div>
   </div>
   <div class="component-arrow"><i class="ph ph-arrow-right"></i></div>
@@ -270,7 +270,7 @@ I'd estimate the split as roughly 50% planning, 20% implementation, 30% debuggin
 
 ## Where the Human Effort Actually Goes
 
-Most of my time goes into planning. The rest is debugging and hardening — working through the edge cases that only surface when real data hits the system. What I don't do is write implementation code.
+Most of my time goes into planning. The rest is debugging and hardening - working through the edge cases that only surface when real data hits the system. What I don't do is write implementation code.
 
 A typical module starts with me reviewing the plan - checking that module boundaries make sense, that business rules are stated as testable invariants, that the posting model balances for every transaction type, that inter-module contracts are consistent.
 

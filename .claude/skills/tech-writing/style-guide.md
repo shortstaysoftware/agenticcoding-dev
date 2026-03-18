@@ -177,6 +177,7 @@ Academic abstractions: Prefer practical implementation over theoretical framewor
 Excessive hedging: Be direct about what works and what doesn't
 Walls of text: Break up longer explanations with structure
 Jargon without explanation: Define technical terms on first use
+Em dashes (—): Always use a regular hyphen surrounded by spaces ( - ) instead
 Passive voice overuse: Prefer active, direct constructions
 Condescension: Respect the reader's intelligence while filling knowledge gaps
 AI hype train: Be realistic about current limitations and failure modes
