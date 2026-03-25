@@ -285,6 +285,71 @@
             border-color: #14b8a6;
         }
 
+        /* Lightbox */
+        .prose img {
+            cursor: zoom-in;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .prose img:hover {
+            box-shadow: 0 0 60px rgba(20, 184, 166, 0.2);
+        }
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .lightbox-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .lightbox-overlay img {
+            max-width: 92vw;
+            max-height: 90vh;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+            box-shadow: 0 0 80px rgba(20, 184, 166, 0.15);
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .lightbox-overlay.active img {
+            transform: scale(1);
+        }
+        .lightbox-close {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 201;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s, background 0.2s, color 0.2s;
+        }
+        .lightbox-overlay.active ~ .lightbox-close {
+            opacity: 1;
+        }
+        .lightbox-close:hover {
+            background: #334155;
+            color: #14b8a6;
+            border-color: #14b8a6;
+        }
+
         /* Diagram styles */
         .diagram {
             background: #1e293b;
@@ -387,6 +452,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
+            margin-bottom: 1.25rem;
         }
         .loop-compare-row {
             display: flex;
@@ -817,7 +883,7 @@
                         <a href="../index.html#episodes" class="hover:text-brand-500 hover:bg-dark-card px-3 py-2 rounded-md text-sm font-medium transition-colors">Podcast</a>
                         <a href="../index.html#articles" class="hover:text-brand-500 hover:bg-dark-card px-3 py-2 rounded-md text-sm font-medium transition-colors">Articles</a>
                         <a href="../index.html#about" class="hover:text-brand-500 hover:bg-dark-card px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
-                        <a href="../index.html#newsletter" class="bg-brand-600 hover:bg-brand-500 text-white px-4 py-2 rounded-md text-sm font-bold shadow-lg shadow-brand-500/20 transition-all">Subscribe</a>
+                        <a href="https://www.linkedin.com/in/chrispoulterai/" target="_blank" rel="noopener noreferrer" class="bg-brand-600 hover:bg-brand-500 text-white px-4 py-2 rounded-md text-sm font-bold shadow-lg shadow-brand-500/20 transition-all">Connect</a>
                     </div>
                 </div>
             </div>
@@ -855,7 +921,7 @@
                 <!-- Article Content -->
                 <article class="max-w-3xl">
                     <div class="prose">
-                        <h1 id="structuring-complex-projects-in-convex">Structuring Complex Projects in Convex</h1><p>When your backend grows past a few files, Convex&#39;s file-based routing becomes a double-edged sword.</p>
+                        <p>When your backend grows past a few files, Convex&#39;s file-based routing becomes a double-edged sword.</p>
 <h2 id="the-problem-nobody-warns-you-about">The Problem Nobody Warns You About</h2><p>Convex&#39;s magic is that you write functions, and they become APIs. No routes to configure, no deployment to manage. But as your project grows from 10 functions to 100, that magic starts to feel less like convenience and more like chaos.</p>
 <p>And it&#39;s not just functions. Your schema starts as a single file defining a few tables. Then you add indexes. Then validators for shared field types. Then more tables. Before long, <code>schema.ts</code> is 4,000 lines and neither you nor your agent can find anything. The same thing happens with webhooks, workflows, and scheduled jobs - each one simple in isolation, collectively a mess.</p>
 <p>I hit this wall building a property management system. What started as a clean <code>reservations.ts</code> and <code>rentals.ts</code> evolved into a sprawling <code>convex/</code> directory where related code was scattered across dozens of files. The file-based routing that felt so natural at 500 lines became a liability at 5,000.</p>
@@ -1222,7 +1288,36 @@ export type Level = Infer&lt;typeof levelValidator&gt;;
         </div>
     </footer>
 
+    <!-- Lightbox -->
+    <div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="">
+    </div>
+    <button class="lightbox-close" id="lightbox-close" onclick="closeLightbox()">
+        <i class="ph ph-x text-lg"></i>
+    </button>
+
     <script>
+        // Lightbox
+        function openLightbox(src, alt) {
+            const overlay = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            img.alt = alt || '';
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            const overlay = document.getElementById('lightbox');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+        document.querySelectorAll('.prose img').forEach(img => {
+            img.addEventListener('click', () => openLightbox(img.src, img.alt));
+        });
+
         // Copy code functionality
         function copyCode(btn) {
             const wrapper = btn.closest('.code-block-wrapper');

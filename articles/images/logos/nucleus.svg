@@ -1,0 +1,143 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Definitions -->
+  <defs>
+    <!-- Core gradient (indigo) -->
+    <radialGradient id="coreGradient" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#818CF8" />
+      <stop offset="50%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#4F46E5" />
+    </radialGradient>
+
+    <!-- Orbit gradient -->
+    <linearGradient id="orbitGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0.6" />
+    </linearGradient>
+
+    <!-- Electron gradient -->
+    <radialGradient id="electronGradient" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#818CF8" />
+      <stop offset="100%" stop-color="#6366F1" />
+    </radialGradient>
+
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="0.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Central Nucleus Core -->
+  <circle
+    cx="12"
+    cy="12"
+    r="4"
+    fill="url(#coreGradient)"
+    filter="url(#glow)"
+  />
+
+  <!-- Inner glow effect -->
+  <circle
+    cx="12"
+    cy="12"
+    r="3"
+    fill="none"
+    stroke="#C7D2FE"
+    stroke-width="0.5"
+    opacity="0.4"
+  />
+
+  <!-- Orbital Ring 1 (horizontal) -->
+  <ellipse
+    cx="12"
+    cy="12"
+    rx="9"
+    ry="3"
+    fill="none"
+    stroke="url(#orbitGradient)"
+    stroke-width="0.8"
+    opacity="0.7"
+  />
+
+  <!-- Orbital Ring 2 (diagonal) -->
+  <ellipse
+    cx="12"
+    cy="12"
+    rx="9"
+    ry="3"
+    fill="none"
+    stroke="url(#orbitGradient)"
+    stroke-width="0.8"
+    opacity="0.7"
+    transform="rotate(60 12 12)"
+  />
+
+  <!-- Orbital Ring 3 (diagonal opposite) -->
+  <ellipse
+    cx="12"
+    cy="12"
+    rx="9"
+    ry="3"
+    fill="none"
+    stroke="url(#orbitGradient)"
+    stroke-width="0.8"
+    opacity="0.7"
+    transform="rotate(-60 12 12)"
+  />
+
+  <!-- Electrons on orbits -->
+  <!-- Electron 1 -->
+  <circle
+    cx="21"
+    cy="12"
+    r="1.2"
+    fill="url(#electronGradient)"
+    filter="url(#glow)"
+  >
+    <animate
+      attributeName="cx"
+      values="21;3;21"
+      dur="4s"
+      repeatCount="indefinite"
+    />
+  </circle>
+
+  <!-- Electron 2 -->
+  <circle
+    cx="16.5"
+    cy="5.5"
+    r="1.2"
+    fill="url(#electronGradient)"
+    filter="url(#glow)"
+  >
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 12 12"
+      to="360 12 12"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+  </circle>
+
+  <!-- Electron 3 -->
+  <circle
+    cx="7.5"
+    cy="5.5"
+    r="1.2"
+    fill="url(#electronGradient)"
+    filter="url(#glow)"
+  >
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 12 12"
+      to="-360 12 12"
+      dur="5s"
+      repeatCount="indefinite"
+    />
+  </circle>
+</svg>
