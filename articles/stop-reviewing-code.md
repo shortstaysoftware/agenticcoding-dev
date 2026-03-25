@@ -16,7 +16,7 @@ The thing I didn't expect? Agents are better at reviewing plans than I am. I don
 
 So I built an end-to-end workflow that automates agent review and improvement, while keeping me in the loop for the decisions that actually matter.
 
-![The Nucleus review UI - plan content on the left, prioritised findings on the right](images/plan-review.png)
+![The Nucleus review UI - plan content on the left, prioritised findings on the right](images/plan-reviewing.png)
 
 ## Why Plans Over Code
 
